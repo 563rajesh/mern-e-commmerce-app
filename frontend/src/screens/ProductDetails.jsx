@@ -6,25 +6,28 @@ import {
   Row,
   Col,
   ListGroup,
-  Button,
   Image,
   ListGroupItem,
   Form,
 } from "react-bootstrap";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, NavLink } from "react-router-dom";
 import Rating from "../components/Rating";
 import Loader from "../components/shared/Loader";
 import { Alert } from "react-bootstrap";
 
 const ProductDetails = () => {
   const { id } = useParams();
+
   const dispatch = useDispatch();
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(1);
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
   useEffect(() => {
     dispatch(listProductDetails(id));
   }, [dispatch, id]);
+  // const addToCartHandler = () => {
+  //   // history.push(`/cart/${id}?qty=${qty}`);
+  // };
 
   return (
     <>
@@ -35,7 +38,7 @@ const ProductDetails = () => {
       ) : (
         <div>
           <Link to="/" className="btn btn-light">
-            <i class="fa-solid fa-arrow-left"></i>
+            <i className="fa-solid fa-arrow-left"></i>
             &nbsp;GO BACK
           </Link>
           <Row>
@@ -85,9 +88,16 @@ const ProductDetails = () => {
                 </ListGroupItem>
               )}
               <ListGroupItem>
-                <Button type="button" block>
+                <NavLink
+                  to={`/cart/${id}?qty=${qty}`}
+                  style={{
+                    background: "#000",
+                    color: "#eff4ef",
+                    padding: "5px 20px",
+                  }}
+                >
                   add to cart
-                </Button>
+                </NavLink>
               </ListGroupItem>
             </Col>
           </Row>
