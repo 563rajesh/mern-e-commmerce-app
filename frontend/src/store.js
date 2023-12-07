@@ -11,7 +11,7 @@ import {
 //   userDetailsReducer,
 //   userUpdateProfileReducer,
 // } from "./reducers/userReducers";
-// import { cartReducer } from "./reducers/cartReducer";
+import { cartReducer } from "./reducers/cartReducer";
 // import {
 //   orderCreateReducer,
 //   orderDetailsReducer,
@@ -27,14 +27,14 @@ import {
 //   ? JSON.parse(localStorage.getItem("userInfo"))
 //   : null;
 
-// const cartItemsFromStorage = localStorage.getItem("cartItems")
-//   ? JSON.parse(localStorage.getItem("cartItems"))
-//   : [];
+const cartItemsFromStorage = localStorage.getItem("cartItems")
+  ? JSON.parse(localStorage.getItem("cartItems"))
+  : [];
 
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
-  // cart: cartReducer,
+  cart: cartReducer,
   // userLogin: userLoginReducer,
   // userRegister: userRegisterReducer,
   // userDetails: userDetailsReducer,
@@ -44,15 +44,15 @@ const reducer = combineReducers({
   // orderPay: orderPayReducer,
   // orderListMy: orderListMyReducer,
 });
-// const initialState = {
-//   // cart: { cartItems: "techinfo" },
-//   cart: {
-//     cartItems: cartItemsFromStorage,
-//     shippingAddress: shippingAddressFromStorage,
-//   },
-//   userLogin: { userInfo: userInfoFromStorage },
-// };
-const initialState = {};
+const initialState = {
+  // cart: { cartItems: "techinfo" },
+  cart: {
+    cartItems: cartItemsFromStorage,
+    // shippingAddress: shippingAddressFromStorage,
+  },
+  // userLogin: { userInfo: userInfoFromStorage },
+};
+// const initialState = {};
 const middleware = [thunk];
 const store = createStore(
   reducer,

@@ -72,7 +72,7 @@ const ProductDetails = () => {
               {product.countInStock > 0 && (
                 <ListGroupItem>
                   <Row>
-                    <Col>Qty</Col>l{" "}
+                    <Col>Qty</Col>{" "}
                     <Form.Control
                       as="select"
                       value={qty}

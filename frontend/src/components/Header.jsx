@@ -4,10 +4,11 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { LinkContainer } from "react-router-bootstrap";
 import HomeScreen from "../screens/HomeScreen";
+import CartScreen from "../screens/CartScreen";
 
 const Header = () => {
-  const h1 = () => {
-    return <h1>rajesh</h1>;
+  const handleClick = () => {
+    return <CartScreen />;
   };
   return (
     <>
@@ -20,8 +21,8 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-              <LinkContainer to="/cart" component={h1}>
-                <Nav.Link>
+              <LinkContainer to="/cart">
+                <Nav.Link onClick={handleClick}>
                   <i className="fa-solid fa-cart-shopping"></i>
                   &nbsp;cart
                 </Nav.Link>

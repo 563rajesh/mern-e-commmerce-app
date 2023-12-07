@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import HomeScreen from "./screens/HomeScreen";
 import ProductDetails from "./screens/ProductDetails";
-import cartScreen from "./screens/cartScreen";
+import CartScreen from "./screens/CartScreen";
 
 function App() {
   const HomeScreenCom = () => {
@@ -22,7 +22,7 @@ function App() {
         <Container>
           <Route path="/" component={HomeScreenCom} exact></Route>
           <Route path="/product/:id" component={ProductDetailsCom} />
-          <Route path="/cart/:id?" component={cartScreen} />
+          <Route path="/cart/:id?" component={CartScreen} />
         </Container>
       </main>
       <Footer />
