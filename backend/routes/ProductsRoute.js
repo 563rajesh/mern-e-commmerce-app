@@ -1,25 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const asyncHandler = require("express-async-handler"); //mdleware
-const Product = require("../models/ProductModel");
+const {
+  getProduct,
+  getProducts,
+} = require("../controllers/productsController");
 
 //router for all products
-router.get(
-  "/products",
-  asyncHandler(async (req, res) => {
-    const products = await Product.find({});
-    res.json(products);
-  })
-);
-router.get(
-  "/products/:id",
-  asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params.id);
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(400).json({ message: "Product not found" });
-    }
-  })
-);
+router.route("/products").get(getProducts);
+router.route("/products/:id").get(getProduct);
+
 module.exports = router;
