@@ -14,12 +14,12 @@ connectDb();
 
 const app = exprees();
 app.use(exprees.json());
-app.use(errorHandler);
 app.get("/", (req, res) => {
   res.json("welcom to node server");
 });
 app.use("/api", productRoutes);
 app.use("/api/users", usersController);
+app.use(errorHandler);
 
 app.listen(process.env.PORT, () => {
   console.log(

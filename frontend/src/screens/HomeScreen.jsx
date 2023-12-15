@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { listProducts } from "../actions/productActions";
 import { useDispatch, useSelector } from "react-redux";
 import ProductScreen from "./ProductScreen";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 import Loader from "../components/shared/Loader";
 import Message from "../components/shared/Message";
 const HomeScreen = () => {
@@ -11,10 +11,10 @@ const HomeScreen = () => {
   const { loading, error, products } = productList;
 
   useEffect(() => {
-    dispatch(listProducts);
+    dispatch(listProducts());
   }, [dispatch]);
   return (
-    <>
+    <Container>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -30,7 +30,7 @@ const HomeScreen = () => {
           })}
         </Row>
       )}
-    </>
+    </Container>
   );
 };
 
