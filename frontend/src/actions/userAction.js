@@ -1,3 +1,4 @@
+import { LIST_MY_ORDERS_RESET } from "../constants/orderConstants";
 import {
   USER_LOGIN_SUCCESS,
   USER_LOGIN_REQUEST,
@@ -14,8 +15,13 @@ import {
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_RESET,
   CLOSE_NOTIFICATION,
+  USER_DETAILS_RESET,
 } from "../constants/userConstants";
 import axios from "axios";
+
+export const ordersReset = () => (dispatch) => {
+  dispatch({ type: LIST_MY_ORDERS_RESET });
+};
 
 export const notification = () => (dispatch) => {
   try {
@@ -31,8 +37,10 @@ export const notification = () => (dispatch) => {
   }
 };
 
-export const logout = () => (dispatch) => {
+export const logout = () => async (dispatch) => {
   localStorage.removeItem("userInfo");
+  dispatch({ type: USER_DETAILS_RESET });
+  dispatch({ type: LIST_MY_ORDERS_RESET });
   dispatch({ type: USER_LOGOUT_REQUEST });
 };
 

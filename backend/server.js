@@ -1,11 +1,11 @@
 const exprees = require("express");
 const { errorHandler } = require("./middlewares/errorMiddleware");
 require("colors");
-const products = require("./data/products");
 const dotenv = require("dotenv");
 const connectDb = require("./config/config");
 const productRoutes = require("./routes/ProductsRoute");
 const usersController = require("./routes/usersRoutes");
+const orderRoute = require("./routes/orderRoute");
 
 //dotenv config
 dotenv.config();
@@ -19,6 +19,10 @@ app.get("/", (req, res) => {
 });
 app.use("/api", productRoutes);
 app.use("/api/users", usersController);
+app.use("/api/orders", orderRoute);
+app.get("/api/config/paypal", (req, res) => {
+  res.send(process.env.PAYPAL_CLIENT_ID);
+});
 app.use(errorHandler);
 
 app.listen(process.env.PORT, () => {

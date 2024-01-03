@@ -8,6 +8,7 @@ import CartScreen from "../screens/CartScreen";
 import { useSelector, useDispatch } from "react-redux";
 import { NavDropdown } from "react-bootstrap";
 import { logout } from "../actions/userAction";
+import { useHistory } from "react-router-dom";
 
 const Header = () => {
   const handleClick = () => {
@@ -17,9 +18,12 @@ const Header = () => {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const history = useHistory();
   const logoutHandler = () => {
     dispatch(logout());
+    history.push("/");
   };
+
   return (
     <>
       <Navbar bg="dark" expand="lg" variant="dark">

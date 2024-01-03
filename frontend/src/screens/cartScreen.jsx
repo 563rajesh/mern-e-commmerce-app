@@ -15,7 +15,7 @@ import {
   ListGroupItem,
 } from "react-bootstrap";
 
-const CartScreen = () => {
+const CartScreen = ({ history }) => {
   const { id } = useParams();
   const location = useLocation();
   const qty = location.search ? Number(location.search.split("=")[1]) : 1;
@@ -29,6 +29,9 @@ const CartScreen = () => {
   const { cartItems } = cart;
   const RemoveFromCartHandler = (id) => {
     dispatch(RemoveFromCart(id));
+  };
+  const checkout = () => {
+    history.push("/login?redirect=shipping");
   };
 
   return (
@@ -49,7 +52,7 @@ const CartScreen = () => {
                       <Image src={item.image} fluid rounded />
                     </Col>
                     <Col md={3}>
-                      <Link to={`/product/${item.product}`}>{item.name}</Link>
+                      <Link to={`/products/${item.product}`}>{item.name}</Link>
                     </Col>
                     <Col md={2}>${item.price}</Col>
                     <Col md={2}>
@@ -106,6 +109,7 @@ const CartScreen = () => {
                 type="button"
                 className="btn-block"
                 disabled={cartItems.length === 0}
+                onClick={checkout}
               >
                 Procede to checkout
               </Button>

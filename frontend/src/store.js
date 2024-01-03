@@ -12,16 +12,19 @@ import {
   userUpdateProfileReducer,
 } from "./reducers/userReducers";
 import { cartReducer } from "./reducers/cartReducer";
-// import {
-//   orderCreateReducer,
-//   orderDetailsReducer,
-//   orderPayReducer,
-//   orderListMyReducer,
-// } from "./reducers/orderReducer";
+import {
+  orderCreateReducer,
+  orderDetailsReducer,
+  orderPayReducer,
+  orderedListReducer,
+} from "./reducers/orderReducers";
 
-// const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
-//   ? JSON.parse(localStorage.getItem("shippingAddress"))
-//   : {};
+const paymentMethodFromStorage = localStorage.getItem("paymentMethod")
+  ? JSON.parse(localStorage.getItem("paymentMethod"))
+  : "";
+const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
+  ? JSON.parse(localStorage.getItem("shippingAddress"))
+  : {};
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -39,16 +42,17 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
-  // orderCreate: orderCreateReducer,
-  // orderDetails: orderDetailsReducer,
-  // orderPay: orderPayReducer,
-  // orderListMy: orderListMyReducer,
+  orderCreate: orderCreateReducer,
+  orderDetails: orderDetailsReducer,
+  orderPay: orderPayReducer,
+  listMyOrders: orderedListReducer,
 });
 const initialState = {
   // cart: { cartItems: "techinfo" },
   cart: {
     cartItems: cartItemsFromStorage,
-    // shippingAddress: shippingAddressFromStorage,
+    shippingAddress: shippingAddressFromStorage,
+    paymentMethod: paymentMethodFromStorage,
   },
   userLogin: { userInfo: userInfoFromStorage },
 };

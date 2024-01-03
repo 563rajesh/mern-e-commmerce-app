@@ -9,28 +9,30 @@ import CartScreen from "./screens/CartScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import ShippingScreen from "./screens/ShippingScreen";
+import PaymentScreen from "./screens/PaymentScreen";
+import PlaceOrderScreen from "./screens/PlaceOrderScreen";
+import OrderScreen from "./screens/OrderScreen";
+import ShowOrders from "./screens/ShowOrders";
 
 function App() {
-  const HomeScreenCom = () => {
-    return <HomeScreen />;
-  };
-  //give with exact it works
-  const ProductDetailsCom = () => {
-    return <ProductDetails />;
-  };
-
   return (
     <BrowserRouter>
       <Header />
 
-      <main>
+      <main className="my-3">
         <Container>
-          <Route path="/" component={HomeScreenCom} exact></Route>
+          <Route path="/" component={HomeScreen} exact></Route>
           <Route path="/login" component={LoginScreen} exact></Route>
+          <Route path="/order/:id" component={OrderScreen} exact></Route>
+          <Route path="/placeorder" component={PlaceOrderScreen} exact></Route>
+          <Route path="/payment" component={PaymentScreen} exact></Route>
+          <Route path="/shipping" component={ShippingScreen} exact></Route>
           <Route path="/register" component={RegisterScreen} exact></Route>
           <Route path="/profile" component={ProfileScreen} exact></Route>
-          <Route path="/product/:id" component={ProductDetailsCom} />
-          <Route path="/cart/:id?" component={CartScreen} />
+          <Route path="/products/:id" component={ProductDetails} exact />
+          <Route path="/cart" component={CartScreen} exact />
+          <Route path="/myorders" component={ShowOrders} exact />
         </Container>
       </main>
       <Footer />

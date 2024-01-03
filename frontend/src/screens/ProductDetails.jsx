@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { listProductDetails } from "../actions/productActions";
+import Message from "../components/shared/Message";
 import {
   Row,
   Col,
@@ -9,32 +10,35 @@ import {
   Image,
   ListGroupItem,
   Form,
+  Button,
 } from "react-bootstrap";
-import { useParams, Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
 import Loader from "../components/shared/Loader";
-import { Alert } from "react-bootstrap";
+import { addToCart } from "../actions/cartAction";
 
-const ProductDetails = () => {
-  const { id } = useParams();
-
+const ProductDetails = ({ history, match }) => {
   const dispatch = useDispatch();
   const [qty, setQty] = useState(1);
+  const [success, setSuccess] = useState(false);
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
   useEffect(() => {
-    dispatch(listProductDetails(id));
-  }, [dispatch, id]);
-  // const addToCartHandler = () => {
-  //   // history.push(`/cart/${id}?qty=${qty}`);
-  // };
+    dispatch(listProductDetails(match.params.id));
+  }, [dispatch, match]);
 
+  const addToCartHandler = () => {
+    // history.push(`/cart/${match.params.id}?qty=${qty}`);
+    dispatch(addToCart(match.params.id, qty));
+    setSuccess(true);
+  };
   return (
     <>
+      <h3 style={{ textAlign: "center" }}>PRODUCT DETAILS</h3>
       {loading ? (
         <Loader />
       ) : error ? (
-        <Alert variant="danger">{error}</Alert>
+        <Message variant="danger">{error}</Message>
       ) : (
         <div>
           <Link to="/" className="btn btn-light">
@@ -46,7 +50,7 @@ const ProductDetails = () => {
               <Image src={product.image} alt={product.name} fluid />
             </Col>
             <Col md={3}>
-              <ListGroup variant="flush">
+              <ListGroup>
                 <ListGroupItem>
                   <h3>{product.name}</h3>
                 </ListGroupItem>
@@ -56,16 +60,16 @@ const ProductDetails = () => {
                     text={`${product.numReviews} reviews`}
                   />
                 </ListGroupItem>
-                <ListGroupItem>price:{product.price}</ListGroupItem>
+                <ListGroupItem>Price:${product.price}</ListGroupItem>
                 <ListGroupItem>{product.description}</ListGroupItem>
               </ListGroup>
             </Col>
             <Col md={3}>
               <ListGroupItem>
                 <Row>
-                  <Col>status:</Col>
+                  <Col>Status:</Col>
                   <Col>
-                    {product.countInStock >= 0 ? "instock" : "outstock"}
+                    {product.countInStock >= 0 ? "Instock" : "Outstock"}
                   </Col>
                 </Row>
               </ListGroupItem>
@@ -88,16 +92,21 @@ const ProductDetails = () => {
                 </ListGroupItem>
               )}
               <ListGroupItem>
-                <NavLink
-                  to={`/cart/${id}?qty=${qty}`}
-                  style={{
-                    background: "#000",
-                    color: "#eff4ef",
-                    padding: "5px 20px",
-                  }}
+                <Button
+                  className="btn-block"
+                  type="button"
+                  onClick={addToCartHandler}
+                  disabled={product.countInStock === 0}
                 >
-                  add to cart
-                </NavLink>
+                  Add to cart
+                </Button>
+              </ListGroupItem>
+              <ListGroupItem>
+                {success && (
+                  <Message variant="success">
+                    Item added to cart successfully
+                  </Message>
+                )}
               </ListGroupItem>
             </Col>
           </Row>

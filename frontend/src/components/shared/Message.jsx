@@ -17,15 +17,15 @@ export const UpdateSuccessMessage = ({ variant, children }) => {
     </>
   );
 };
-
-const Message = ({ variant, children }) => {
+//use timer
+const Message = ({ variant, children, delay = 5000 }) => {
   const [show, setShow] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => {
       setShow(false);
-    }, 3000);
+    }, delay);
     return () => clearTimeout(timer);
-  }, [show]);
+  }, [show, delay]);
   return (
     <>
       {show && (
@@ -35,19 +35,10 @@ const Message = ({ variant, children }) => {
       )}
     </>
   );
-  // return (
-  //   <>
-  //     <Toast
-  //       onClose={() => setShow(false)}
-  //       closeButton
-  //       show={show}
-  //       delay={3000}
-  //       autohide
-  //     >
-  //       {children}
-  //     </Toast>
-  //   </>
-  // );
+};
+//without close & timer
+export const ToastMessage = ({ children, variant }) => {
+  return <Alert variant={variant}>{children}</Alert>;
 };
 
 export default Message;

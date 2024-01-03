@@ -2,13 +2,18 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
-    orderItem: [
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    orderItems: [
       {
         name: {
           type: String,
           required: true,
         },
-        qyt: {
+        qty: {
           type: Number,
           required: true,
         },
@@ -16,7 +21,11 @@ const orderSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
-        Product: {
+        image: {
+          type: String,
+          required: true,
+        },
+        product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
           ref: "Product",
@@ -40,8 +49,12 @@ const orderSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      mobileNo: {
+        type: Number,
+        required: true,
+      },
     },
-    payment: {
+    paymentMethod: {
       type: String,
       required: true,
     },
@@ -71,11 +84,11 @@ const orderSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    paidAT: {
-      type: String,
+    paidAt: {
+      type: Date,
     },
     isDelivered: {
-      type: String,
+      type: Boolean,
       required: true,
       default: false,
     },

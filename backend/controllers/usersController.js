@@ -23,10 +23,11 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User Not Found");
   }
 });
-
+//login user
 const authController = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+
   //checking password , generating token
   if (user && (await user.matchPassword(password))) {
     res.json({
@@ -41,6 +42,7 @@ const authController = asyncHandler(async (req, res) => {
     throw new Error("Invalid Email or Password");
   }
 });
+
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (user) {
@@ -49,6 +51,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      createdAt: user.createdAt,
     });
   } else {
     res.status(404);

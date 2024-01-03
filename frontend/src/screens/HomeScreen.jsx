@@ -5,7 +5,7 @@ import ProductScreen from "./ProductScreen";
 import { Row, Col, Container } from "react-bootstrap";
 import Loader from "../components/shared/Loader";
 import Message from "../components/shared/Message";
-const HomeScreen = () => {
+const HomeScreen = (props) => {
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
@@ -13,6 +13,7 @@ const HomeScreen = () => {
   useEffect(() => {
     dispatch(listProducts());
   }, [dispatch]);
+  console.log(props);
   return (
     <Container>
       {loading ? (
@@ -21,13 +22,14 @@ const HomeScreen = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <Row>
-          {products.map((product) => {
-            return (
-              <Col key={product._id} md={3}>
-                <ProductScreen product={product} />
-              </Col>
-            );
-          })}
+          {products &&
+            products.map((product) => {
+              return (
+                <Col key={product._id} md={3}>
+                  <ProductScreen product={product} />
+                </Col>
+              );
+            })}
         </Row>
       )}
     </Container>
