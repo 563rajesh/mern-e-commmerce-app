@@ -4,24 +4,29 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { LinkContainer } from "react-router-bootstrap";
 import HomeScreen from "../screens/HomeScreen";
-import CartScreen from "../screens/CartScreen";
+// import CartScreen from "../screens/CartScreen";
 import { useSelector, useDispatch } from "react-redux";
 import { NavDropdown } from "react-bootstrap";
 import { logout } from "../actions/userAction";
 import { useHistory } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const Header = () => {
-  const handleClick = () => {
-    return <CartScreen />;
+  const dispatch = useDispatch();
+  const alert = useAlert();
+
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
+  const history = useHistory();
+
+  const cartClickHandler = () => {
+    // return <CartScreen />;
+    history.push("/cart");
   };
 
-  const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const history = useHistory();
   const logoutHandler = () => {
     dispatch(logout());
-    history.push("/");
+    alert.success("Logged out successfully");
   };
 
   return (
@@ -36,13 +41,18 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
               <LinkContainer to="/cart">
-                <Nav.Link onClick={handleClick}>
+                <Nav.Link onClick={cartClickHandler}>
                   <i className="fa-solid fa-cart-shopping"></i>
                   &nbsp;cart
                 </Nav.Link>
               </LinkContainer>
-              {userInfo ? (
-                <NavDropdown title={userInfo.name} id="username">
+              {isAuthenticated ? (
+                <NavDropdown title={user && user.name} id="username">
+                  {user && user.role === "Admin" && (
+                    <LinkContainer to="/admin/dashboard">
+                      <NavDropdown.Item>Admin Dashboard</NavDropdown.Item>
+                    </LinkContainer>
+                  )}
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>

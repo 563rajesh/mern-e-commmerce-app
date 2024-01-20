@@ -5,18 +5,30 @@ const {
   getUserProfile,
   registerUser,
   updateUserProfile,
+  getAllUsers,
+  getSingleUser,
+  updateUserRole,
+  deleteUser,
+  logout,
 } = require("../controllers/usersController");
-const { protect } = require("../middlewares/authMiddleware");
+const { protect, isAdmin } = require("../middlewares/authMiddleware");
 
 //user registration
-router.route("/").post(registerUser);
+router.route("/register").post(registerUser);
 
-//post email and password auth
-router.post("/login", authController);
+//email and password auth
+router.route("/login").post(authController);
+router.route("/logout").get(logout);
 //get user profile private route
+router.route("/profile").get(protect, getUserProfile);
+router.route("/profile/update").put(protect, updateUserProfile);
+
+//admin route
+router.route("/admin/users").get(protect, isAdmin, getAllUsers);
 router
-  .route("/profile")
-  .get(protect, getUserProfile)
-  .put(protect, updateUserProfile);
+  .route("/admin/user/:id")
+  .get(protect, isAdmin, getSingleUser)
+  .put(protect, isAdmin, updateUserRole)
+  .delete(protect, isAdmin, deleteUser);
 
 module.exports = router;

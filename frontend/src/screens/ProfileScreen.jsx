@@ -1,118 +1,69 @@
-import React, { useState, useEffect } from "react";
-import { getUserDetails, updateUserProfile } from "../actions/userAction";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Button, Row, Col, ListGroup, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Message, { UpdateSuccessMessage } from "../components/shared/Message";
 import Loader from "../components/shared/Loader";
 import { LinkContainer } from "react-router-bootstrap";
+import { clearErrors } from "../actions/userAction";
 
-const ProfileScreen = ({ history }) => {
-  const [name, setName] = useState("");
-  const [email, setImail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [updatePassword, setUpdatePassword] = useState(false);
-
+const ProfileScreen = () => {
   const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
-  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
-  const { success } = userUpdateProfile;
+  const { loading, user, error } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (!userInfo) {
-      history.push("/login");
-    } else {
-      if (!user.name) {
-        dispatch(getUserDetails("profile"));
-      } else {
-        setName(user.name);
-        setImail(user.email);
-      }
+    // if (!user.name) {
+    //   dispatch(getUserDetails("profile"));
+    // }
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
     }
-  }, [dispatch, history, userInfo, user]);
-  const submitHandler = (e) => {
-    e.preventDefault();
-    //dispatch
-    dispatch(updateUserProfile({ id: user._id, name, email, password }));
-  };
+  }, [dispatch, error]);
   return (
     <>
-      <Row>
-        <Col md={6}>
-          <h1 style={{ wordWrap: "break-word" }}>UPDATE INFORMATION</h1>
-          {error && <Message variant="danger">{error}</Message>}
-          {success && (
-            <UpdateSuccessMessage variant="success">
-              Updated profile successfully
-            </UpdateSuccessMessage>
-          )}
-          {loading && <Loader />}
-          <Form onSubmit={submitHandler}>
-            <Form.Group controlId="name">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="enter name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="email">
-              <Form.Label>Email Address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="enter email"
-                value={email}
-                onChange={(e) => setImail(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-            {updatePassword ? (
-              <div>
-                <Form.Group controlId="password">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="enter password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  ></Form.Control>
-                </Form.Group>
-                <Form.Group controlId="confirmPassword">
-                  <Form.Label>Confirm Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="re-enter password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                  ></Form.Control>
-                </Form.Group>
-              </div>
-            ) : (
-              ""
-            )}
-            <h5>
-              Joined At{" "}
-              <span>{user.createdAt && user.createdAt.substring(0, 10)}</span>
-            </h5>
-            <Button type="submit" variant="primary">
-              update
-            </Button>
-          </Form>
-          <Button
-            onClick={() => setUpdatePassword(true)}
-            variant="info"
-            disabled={updatePassword}
-          >
-            reset password
-          </Button>
-          <LinkContainer to="/myorders">
-            <Button variant="info"> MYORDERS</Button>
-          </LinkContainer>
-        </Col>
-      </Row>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Row>
+          <Col md={4}>
+            <Image src="/profile.png" fluid></Image>
+          </Col>
+          <Col md={8}>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                Full Name
+                <div>{user && user.name}</div>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                Email
+                <div>{user && user.email}</div>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <h5>
+                  Joined At{" "}
+                  <span>
+                    {user.createdAt && user.createdAt.substring(0, 10)}
+                  </span>
+                </h5>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <LinkContainer to="/profile/update">
+                  <Button type="button" className="btn-block">
+                    Edit Profile
+                  </Button>
+                </LinkContainer>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <LinkContainer to="/myorders">
+                  <Button variant="info" className="btn-block">
+                    {" "}
+                    MYORDERS
+                  </Button>
+                </LinkContainer>
+              </ListGroup.Item>
+            </ListGroup>
+          </Col>
+        </Row>
+      )}
     </>
   );
 };

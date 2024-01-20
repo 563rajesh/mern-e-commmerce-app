@@ -8,14 +8,14 @@ const PaymentScreen = ({ history }) => {
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
   if (!shippingAddress.address) {
-    history.push("/shipping");
+    history.push("/placeorder");
   }
-  const [paymentMethod, setPaymentMethod] = useState("paypal");
+  const [paymentMethod, setPaymentMethod] = useState("PayPal");
   const dispatch = useDispatch();
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(savePaymentMethod(paymentMethod));
-    history.push("/placeorder");
+    history.push("/order/pay");
   };
   return (
     <>
@@ -27,10 +27,10 @@ const PaymentScreen = ({ history }) => {
             <Form.Check
               type="radio"
               checked
-              label="Paypal or Credit Card"
-              id="paypal"
+              label="PayPal or Credit Card"
+              id="PayPal"
               name="paymentmethod"
-              value="paypal"
+              value="PayPal"
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
           </Col>

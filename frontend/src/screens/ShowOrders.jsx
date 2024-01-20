@@ -2,36 +2,37 @@ import React, { useEffect } from "react";
 import { Button, Row, Col, Table } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Message from "../components/shared/Message";
 import Loader from "../components/shared/Loader";
-import { orderList } from "../actions/orderActions";
+import { clearErrors, orderList } from "../actions/orderActions";
 
 const ShowOrders = () => {
   const dispatch = useDispatch();
-  const listMyOrders = useSelector((state) => state.listMyOrders);
-  const { loading: loadingOrders, error: errorOrders, orders } = listMyOrders;
+  const { loading, error, orders } = useSelector((state) => state.listMyOrders);
 
   useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
     dispatch(orderList());
-  }, [dispatch]);
+  }, [dispatch, error]);
   return (
     <>
       <Row>
         <Col>
           <h1>My orders</h1>
-          {loadingOrders ? (
+          {loading ? (
             <Loader />
-          ) : errorOrders ? (
-            <Message variant="danger">{errorOrders}</Message>
           ) : (
             <Table striped bordered hover responsive className="table-sm">
               <thead>
                 <tr>
-                  <td>ID</td>
+                  <td>ORDER ID</td>
                   <td>DATE</td>
-                  <td>TOTAL $</td>
-                  <td>PAID</td>
-                  <td>DELIVERED</td>
+                  <td>AMOUNT</td>
+                  <td>ITEMS QTY</td>
+                  <td>STATUS</td>
+                  <td>ACTIONS</td>
                 </tr>
               </thead>
               <tbody>
@@ -41,30 +42,19 @@ const ShowOrders = () => {
                       <td>{order._id}</td>
                       <td>{order.createdAt.substring(0, 10)}</td>
                       <td>{order.totalPrice}</td>
+                      <td>{order.orderItems.length}</td>
                       <td>
-                        {order.isPaid ? (
-                          order.paidAt && order.paidAt.substring(0, 10)
-                        ) : (
-                          <i
-                            className="fas fa-times"
-                            style={{ color: "red" }}
-                          ></i>
-                        )}
-                      </td>
-                      <td>
-                        {order.isDelivered ? (
-                          order.deliveredAt &&
-                          order.deliveredAt.substring(0, 10)
-                        ) : (
-                          <i
-                            className="fas fa-times"
-                            style={{ color: "red" }}
-                          ></i>
-                        )}
+                        <div>{order.orderStatus}</div>
+                        {order.orderStatus === "Delivered"
+                          ? order.deliveredAt &&
+                            order.deliveredAt.substring(0, 10)
+                          : ""}
                       </td>
                       <td>
                         <LinkContainer to={`/order/${order._id}`}>
-                          <Button variant="light">Details</Button>
+                          <Button variant="light">
+                            <i className="fas fa-info"></i>
+                          </Button>
                         </LinkContainer>
                       </td>
                     </tr>

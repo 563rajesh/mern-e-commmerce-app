@@ -5,7 +5,7 @@ const User = [
     name: "admin",
     email: "admin@gmail.com",
     password: bcrypt.hashSync("1234546", 10),
-    isAdmin: true,
+    role: "Admin",
   },
   {
     name: "infoteck",

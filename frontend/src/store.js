@@ -4,19 +4,23 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import {
   productListReducer,
   productDetailsReducer,
+  newProductReducer,
+  productReducer,
+  newReviewReducer,
 } from "./reducers/productReducer";
 import {
-  userLoginReducer,
-  userRegisterReducer,
-  userDetailsReducer,
+  userReducer,
   userUpdateProfileReducer,
+  allUserReducer,
+  getSingleUserReducer,
 } from "./reducers/userReducers";
 import { cartReducer } from "./reducers/cartReducer";
 import {
   orderCreateReducer,
   orderDetailsReducer,
-  orderPayReducer,
-  orderedListReducer,
+  myOrders,
+  allOrdersReducer,
+  orderReducer,
 } from "./reducers/orderReducers";
 
 const paymentMethodFromStorage = localStorage.getItem("paymentMethod")
@@ -26,9 +30,9 @@ const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
   ? JSON.parse(localStorage.getItem("shippingAddress"))
   : {};
 
-const userInfoFromStorage = localStorage.getItem("userInfo")
-  ? JSON.parse(localStorage.getItem("userInfo"))
-  : null;
+// const userInfoFromStorage = localStorage.getItem("userInfo")
+//   ? JSON.parse(localStorage.getItem("userInfo"))
+//   : null;
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))
@@ -37,24 +41,27 @@ const cartItemsFromStorage = localStorage.getItem("cartItems")
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
+  newProduct: newProductReducer,
+  product: productReducer,
   cart: cartReducer,
-  userLogin: userLoginReducer,
-  userRegister: userRegisterReducer,
-  userDetails: userDetailsReducer,
+  user: userReducer,
+  singleUser: getSingleUserReducer,
   userUpdateProfile: userUpdateProfileReducer,
+  listUser: allUserReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
-  orderPay: orderPayReducer,
-  listMyOrders: orderedListReducer,
+  listMyOrders: myOrders,
+  allOrders: allOrdersReducer,
+  order: orderReducer,
+  newReview: newReviewReducer,
 });
 const initialState = {
-  // cart: { cartItems: "techinfo" },
   cart: {
     cartItems: cartItemsFromStorage,
     shippingAddress: shippingAddressFromStorage,
     paymentMethod: paymentMethodFromStorage,
   },
-  userLogin: { userInfo: userInfoFromStorage },
+  // user: { userInfo: userInfoFromStorage },
 };
 // const initialState = {};
 const middleware = [thunk];

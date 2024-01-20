@@ -2,6 +2,7 @@ const exprees = require("express");
 const { errorHandler } = require("./middlewares/errorMiddleware");
 require("colors");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 const connectDb = require("./config/config");
 const productRoutes = require("./routes/ProductsRoute");
 const usersController = require("./routes/usersRoutes");
@@ -14,12 +15,13 @@ connectDb();
 
 const app = exprees();
 app.use(exprees.json());
+app.use(cookieParser());
 app.get("/", (req, res) => {
   res.json("welcom to node server");
 });
 app.use("/api", productRoutes);
-app.use("/api/users", usersController);
-app.use("/api/orders", orderRoute);
+app.use("/api", usersController);
+app.use("/api", orderRoute);
 app.get("/api/config/paypal", (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID);
 });

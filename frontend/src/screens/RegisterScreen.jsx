@@ -1,37 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { register } from "../actions/userAction";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import Message from "../components/shared/Message";
 import Loader from "../components/shared/Loader";
 import FormContainer from "../components/shared/FormContainer";
+import { clearErrors } from "../actions/orderActions";
+import { useAlert } from "react-alert";
 
 const RegisterScreen = ({ location, history }) => {
   const [name, setName] = useState("");
   const [email, setImail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [role, setRole] = useState("");
+
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
+  const passwordElement = useRef(null);
+  const confirmPasswordElement = useRef(null);
+
   const dispatch = useDispatch();
-  const userRegister = useSelector((state) => state.userRegister);
-  const { loading, error, userInfo } = userRegister;
-  // console.log(redirect);
-  // console.log(location);
+  const alert = useAlert();
+
+  const { loading, error, isAuthenticated } = useSelector(
+    (state) => state.user
+  );
 
   useEffect(() => {
-    if (userInfo) {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
+
+    if (isAuthenticated) {
       history.push(redirect);
     }
-  }, [history, userInfo, redirect]);
+  }, [history, isAuthenticated, redirect, dispatch, alert, error]);
+
   const submitHandler = (e) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
-      setMessage("Password do not match");
+      alert.error("Password do not match");
+      passwordElement.current.focus();
+      passwordElement.current.value = "";
+      confirmPasswordElement.current.value = "";
     } else {
-      dispatch(register(name, email, password));
+      dispatch(register(name, email, password, role));
     }
   };
 
@@ -40,10 +56,25 @@ const RegisterScreen = ({ location, history }) => {
       <FormContainer>
         <h1>REGISTER</h1>
 
-        {error && <Message variant="danger">{error}</Message>}
         {loading && <Loader />}
-        {message && <Message variant="danger">{message}</Message>}
+
         <Form onSubmit={submitHandler}>
+          <Form.Group controlId="role">
+            Register As:{" "}
+            {["User", "Admin"].map((userType) => (
+              <Form.Check
+                key={userType}
+                inline
+                label={userType}
+                value={userType}
+                name="group1"
+                type="radio"
+                onChange={(e) => setRole(e.target.value)}
+                required
+                id={`disabled-default-${userType}`}
+              />
+            ))}
+          </Form.Group>
           <Form.Group controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -68,6 +99,7 @@ const RegisterScreen = ({ location, history }) => {
               type="password"
               placeholder="enter password"
               value={password}
+              ref={passwordElement}
               onChange={(e) => setPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
@@ -77,6 +109,7 @@ const RegisterScreen = ({ location, history }) => {
               type="password"
               placeholder="re-enter password"
               value={confirmPassword}
+              ref={confirmPasswordElement}
               onChange={(e) => setConfirmPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
