@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -24,7 +24,7 @@ import { addToCart } from "../actions/cartAction";
 import { NEW_REVIEW_RESET } from "../constants/productConstant";
 import { useAlert } from "react-alert";
 
-const ProductDetails = ({ match }) => {
+const ProductDetails = ({ match, history }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -32,10 +32,12 @@ const ProductDetails = ({ match }) => {
   const [show, setShow] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const element = useRef(null);
 
   const { loading, product, error } = useSelector(
     (state) => state.productDetails
   );
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   const productId = match.params.id;
 
@@ -49,15 +51,22 @@ const ProductDetails = ({ match }) => {
   };
 
   const submitReviewToggle = () => {
-    show ? setShow(false) : setShow(true);
+    if (isAuthenticated) {
+      show ? setShow(false) : setShow(true);
+    } else {
+      history.push(`/login?redirect=products/${productId}`);
+    }
   };
 
   const submitReviewHandler = () => {
+    if (!comment || !rating) {
+      alert.error("fill all field");
+      return;
+    }
     dispatch(newReview({ comment, rating, productId }));
     setRating(0);
     setShow(false);
   };
-
   useEffect(() => {
     if (reviewError) {
       alert.error(reviewError);
@@ -148,48 +157,52 @@ const ProductDetails = ({ match }) => {
                   onClick={submitReviewToggle}
                   type="button"
                   className="btn-block"
+                  ref={element}
                 >
                   submit review
                 </Button>
-                {show ? (
-                  <Modal show={show} onHide={submitReviewToggle}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>Submit Review</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      <h4>Rate us</h4>
-                      <div>
-                        {[1, 2, 3, 4, 5].map((value) => (
-                          <span
-                            onClick={() => setRating(value)}
-                            style={{
-                              cursor: "pointer",
-                              fontSize: "3em",
-                              color: value <= rating ? "yellow" : "",
-                            }}
-                          >
-                            {value <= rating ? "★" : "☆"}
-                          </span>
-                        ))}
-                      </div>
-                      <textarea
-                        placeholder="Comment..."
-                        rows={5}
-                        cols={60}
-                        onChange={(e) => setComment(e.target.value)}
-                      ></textarea>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button variant="secondary" onClick={submitReviewToggle}>
-                        cancel
-                      </Button>
-                      <Button variant="primary" onClick={submitReviewHandler}>
-                        submit
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
-                ) : (
-                  ""
+                {show && (
+                  <>
+                    <Modal show={show} onHide={submitReviewToggle}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Submit Review</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <h4>Rate us</h4>
+                        <div>
+                          {[1, 2, 3, 4, 5].map((value) => (
+                            <span
+                              onClick={() => setRating(value)}
+                              style={{
+                                cursor: "pointer",
+                                fontSize: "3em",
+                                color: value <= rating ? "yellow" : "",
+                              }}
+                            >
+                              {value <= rating ? "★" : "☆"}
+                            </span>
+                          ))}
+                        </div>
+                        <textarea
+                          placeholder="Comment..."
+                          rows={5}
+                          cols={60}
+                          onChange={(e) => setComment(e.target.value)}
+                        ></textarea>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button
+                          variant="secondary"
+                          onClick={submitReviewToggle}
+                        >
+                          cancel
+                        </Button>
+                        <Button variant="primary" onClick={submitReviewHandler}>
+                          submit
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </>
                 )}
               </ListGroupItem>
             </Col>

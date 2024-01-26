@@ -10,6 +10,7 @@ const Sidebar = () => {
         backgroundColor: "rgba(22, 26, 22, 0.168)",
         color: "MenuText",
         height: "78vh",
+        padding: "30px",
       }}
     >
       <Link to="/admin/dashboard">Dashboard</Link>
@@ -23,6 +24,7 @@ const Sidebar = () => {
       </NavDropdown>
       <Link to="/admin/orders">Orders</Link>
       <Link to="/admin/users">Users</Link>
+      <Link to="/admin/reviews">Reviews</Link>
     </Nav>
   );
 };

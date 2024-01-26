@@ -59,7 +59,7 @@ function App() {
             component={PlaceOrderScreen}
             exact
           />
-          <Route path="/success" component={Success} />
+          <Route path="/success" component={Success} exact />
           <ProtectedRoute path="/myorders" component={ShowOrders} exact />
           <Switch>
             <ProtectedRoute
