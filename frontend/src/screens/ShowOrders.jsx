@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Row, Col, Table } from "react-bootstrap";
+import { Button, Row, Col, Table, Container } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/shared/Loader";
@@ -17,16 +17,16 @@ const ShowOrders = () => {
     dispatch(orderList());
   }, [dispatch, error]);
   return (
-    <>
-      <Row>
-        <Col>
-          <h1>My orders</h1>
+    <Container>
+      <Row className="justify-content-md-center">
+        <Col md={10}>
+          <h2 className="text-muted">My orders</h2>
           {loading ? (
             <Loader />
           ) : (
             <Table striped bordered hover responsive className="table-sm">
               <thead>
-                <tr>
+                <tr className="bg-primary text-center text-nowrap">
                   <td>ORDER ID</td>
                   <td>DATE</td>
                   <td>AMOUNT</td>
@@ -36,15 +36,23 @@ const ShowOrders = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders &&
+                {orders ? (
                   orders.map((order) => (
-                    <tr key={order._id}>
+                    <tr key={order._id} className="text-center">
                       <td>{order._id}</td>
                       <td>{order.createdAt.substring(0, 10)}</td>
                       <td>{order.totalPrice}</td>
                       <td>{order.orderItems.length}</td>
                       <td>
-                        <div>{order.orderStatus}</div>
+                        <div
+                          className={
+                            order.orderStatus === "Delivered"
+                              ? "text-danger"
+                              : "text-success"
+                          }
+                        >
+                          {order.orderStatus}
+                        </div>
                         {order.orderStatus === "Delivered"
                           ? order.deliveredAt &&
                             order.deliveredAt.substring(0, 10)
@@ -53,18 +61,23 @@ const ShowOrders = () => {
                       <td>
                         <LinkContainer to={`/order/${order._id}`}>
                           <Button variant="light">
-                            <i className="fas fa-info"></i>
+                            <i className="bi bi-arrow-up-right-square"></i>
                           </Button>
                         </LinkContainer>
                       </td>
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr className="text-light bg-warning text-center">
+                    <td colSpan={5}>No Order Found</td>
+                  </tr>
+                )}
               </tbody>
             </Table>
           )}
         </Col>
       </Row>
-    </>
+    </Container>
   );
 };
 

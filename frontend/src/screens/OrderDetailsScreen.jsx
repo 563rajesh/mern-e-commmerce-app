@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Row, Col, ListGroup, Image } from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { clearErrors, getOrderDetails } from "../actions/orderActions";
 import Message from "../components/shared/Message";
@@ -12,6 +12,7 @@ const OrderDetailsScreen = ({ match }) => {
 
   const dispatch = useDispatch();
   const alert = useAlert();
+
   const orderId = match.params.id;
 
   useEffect(() => {
@@ -25,74 +26,92 @@ const OrderDetailsScreen = ({ match }) => {
   if (!loading) {
     order.itemsPrice =
       order.orderItems &&
-      order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0);
+      order.orderItems
+        .reduce((acc, item) => acc + item.price * item.qty, 0)
+        .toFixed(2);
   }
 
   return loading ? (
     <Loader />
   ) : (
-    <>
-      <Row>
-        <Col md={8}>
-          <ListGroup>
+    <Container>
+      <Row className="mb-5">
+        <Col md={7}>
+          <ListGroup variant="flush" className="mybox-shadow">
             <ListGroup.Item>
-              <h4>OrderId #{order && orderId}</h4>
+              <h2 className="text-muted text-break">
+                OrderId #<b>{order && orderId}</b>
+              </h2>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h4>Shipping</h4>
-              <p>
-                <strong>Name:</strong>
-                {order.user && order.user.name}
-              </p>
-              <p>
-                <strong>Email:</strong>
-                {order.user && order.user.email}
-              </p>
-              <strong>Address :</strong>
-              {order.shippingAddress && (
+              <h2 className="text-muted">Shipping Info</h2>
+              <address>
                 <p>
-                  {order.shippingAddress.address}&nbsp;
-                  {order.shippingAddress.city}&nbsp;
-                  {order.shippingAddress.postalCode}&nbsp;
-                  {order.shippingAddress.country}&nbsp; Mo:{" "}
-                  {order.shippingAddress.mobileNo}&nbsp;
+                  <strong>Name:&nbsp;</strong>
+                  <span>{order.user && order.user.name}</span>
                 </p>
-              )}
-              <Message variant="info">
+                <p>
+                  <strong>Email:&nbsp;</strong>
+                  <span> {order.user && order.user.email}</span>
+                </p>
+                <p>
+                  <strong>Address:&nbsp;</strong>
+                  {order.shippingAddress && (
+                    <span>
+                      {order.shippingAddress.address}&nbsp;
+                      {order.shippingAddress.city}&nbsp;
+                      {order.shippingAddress.postalCode}&nbsp;
+                      {order.shippingAddress.country}&nbsp; phone: &nbsp;
+                      {order.shippingAddress.mobileNo}&nbsp;
+                    </span>
+                  )}
+                </p>
+              </address>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Message
+                variant={
+                  order.orderStatus === "Delivered" ? "danger" : "primary"
+                }
+              >
                 Status- <b>{order.orderStatus && order.orderStatus}</b>
                 {order.orderStatus === "Delivered" && (
-                  <div> Delivered At {order.deliveredAt.substring(0, 10)}</div>
+                  <span>
+                    {" "}
+                    Delivered At {order.deliveredAt.substring(0, 10)}
+                  </span>
                 )}
               </Message>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h4>Payment Method</h4>
+              <h2 className="text-muted">Payment Info</h2>
               <p>
-                <strong>Pay by :</strong>&nbsp;
-                <strong>{order.paymentMethod && order.paymentMethod}</strong>
+                <strong>
+                  Paid Amount:&nbsp;${order.totalPrice}
+                  <span>&nbsp; | &nbsp;</span>
+                  {order.paymentMethod}
+                </strong>
               </p>
               {order.isPaid ? (
                 <Message variant="success">
-                  Paid On {order.paidAt.substring(0, 10)}
+                  <i className="fa-solid fa-circle-check"></i>&nbsp; Paid On{" "}
+                  {order.paidAt.substring(0, 10)}
                 </Message>
               ) : (
                 <Message variant="danger">Not Paid</Message>
               )}
             </ListGroup.Item>
             <ListGroup.Item>
-              <h2>
-                Order{" "}
+              <h2 className="text-muted">
                 {order.orderItems && order.orderItems.length === 1
-                  ? "Item"
-                  : "Items"}{" "}
+                  ? "Order Item"
+                  : "Order Items"}{" "}
               </h2>
-              {order.orderItems && order.orderItems.length === 0 ? (
-                <Message variant="warning">Your cart is empty</Message>
-              ) : (
-                <ListGroup variant="flush">
+              {order.orderItems && (
+                <ListGroup variant="flush" className="mybox-shadow">
                   {order.orderItems &&
-                    order.orderItems.map((item, index) => (
-                      <ListGroup.Item key={index}>
+                    order.orderItems.map((item) => (
+                      <ListGroup.Item key={item.product}>
                         <Row>
                           <Col md={2}>
                             <Image
@@ -102,13 +121,16 @@ const OrderDetailsScreen = ({ match }) => {
                             ></Image>
                           </Col>
                           <Col>
-                            <Link to={`/product/${item.product}`}>
+                            <Link
+                              to={`/product/${item.product}`}
+                              className="link-styles text-body"
+                            >
                               {item.name}
                             </Link>
                           </Col>
                           <Col md={4}>
                             {" "}
-                            {item.qty} X ${item.price}=
+                            {item.qty} X ${item.price} =
                             <b>${(item.qty * item.price).toFixed(2)}</b>
                           </Col>
                         </Row>
@@ -119,37 +141,37 @@ const OrderDetailsScreen = ({ match }) => {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col md={4}>
-          <Card>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <h2>Order Summary</h2>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Subtotal</Col>
-                  <Col>${order.itemsPrice}</Col>
-                </Row>
-                <Row>
-                  <Col>Shipping</Col>
-                  <Col>${order.shippingPrice}</Col>
-                </Row>
-                <Row>
-                  <Col>Tax</Col>
-                  <Col>${order.taxPrice}</Col>
-                </Row>
-                <Row>
-                  <Col>Total</Col>
-                  <Col>
-                    <b>${order.totalPrice}</b>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-            </ListGroup>
-          </Card>
+        <Col md={4} className="mt-sm-2 mt-md-0">
+          <ListGroup variant="flush" className="mybox-shadow">
+            <ListGroup.Item>
+              <h2 className="text-muted">Order Summary</h2>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col>Subtotal</Col>
+                <Col>${order.itemsPrice}</Col>
+              </Row>
+              <Row>
+                <Col>Shipping</Col>
+                <Col>${order.shippingPrice}</Col>
+              </Row>
+              <Row>
+                <Col>Tax</Col>
+                <Col>${order.taxPrice}</Col>
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col>Total</Col>
+                <Col>
+                  <b>${order.totalPrice}</b>
+                </Col>
+              </Row>
+            </ListGroup.Item>
+          </ListGroup>
         </Col>
       </Row>
-    </>
+    </Container>
   );
 };
 

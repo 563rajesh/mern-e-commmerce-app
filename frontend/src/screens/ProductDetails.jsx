@@ -16,6 +16,7 @@ import {
   Button,
   Modal,
   Card,
+  Container,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
@@ -32,11 +33,12 @@ const ProductDetails = ({ match, history }) => {
   const [show, setShow] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const element = useRef(null);
+  const commentFocus = useRef(null);
 
   const { loading, product, error } = useSelector(
     (state) => state.productDetails
   );
+
   const { isAuthenticated } = useSelector((state) => state.user);
 
   const productId = match.params.id;
@@ -53,14 +55,23 @@ const ProductDetails = ({ match, history }) => {
   const submitReviewToggle = () => {
     if (isAuthenticated) {
       show ? setShow(false) : setShow(true);
+      setComment("");
+      setRating(0);
     } else {
       history.push(`/login?redirect=products/${productId}`);
     }
   };
 
-  const submitReviewHandler = () => {
+  const submitReviewHandler = (e) => {
+    e.preventDefault();
     if (!comment || !rating) {
-      alert.error("fill all field");
+      if (!comment) {
+        alert.error("Give your comment!");
+        commentFocus.current.focus();
+      }
+      if (!rating) {
+        alert.error("Give star");
+      }
       return;
     }
     dispatch(newReview({ comment, rating, productId }));
@@ -87,59 +98,82 @@ const ProductDetails = ({ match, history }) => {
   }, [dispatch, productId, successReview, reviewError, alert, error]);
 
   return (
-    <>
-      <h3 style={{ textAlign: "center" }}>PRODUCT DETAILS</h3>
-      {loading ? (
-        <Loader />
-      ) : (
-        <div>
+    <Container>
+      <Row>
+        <Col>
+          <h2 className="text-center text-muted">PRODUCT DETAILS</h2>
           <Link to="/" className="btn btn-light">
             <i className="fa-solid fa-arrow-left"></i>
             &nbsp;GO BACK
           </Link>
-          <Row>
-            <Col md={6}>
-              <Image src={product.image} alt={product.name} fluid />
-            </Col>
-            <Col md={3}>
-              <ListGroup>
-                <ListGroupItem>
-                  <h3>{product.name}</h3>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <Rating
-                    value={product.rating}
-                    text={`${product.numReviews} reviews`}
-                  />
-                </ListGroupItem>
-                <ListGroupItem>Price:${product.price}</ListGroupItem>
-                <ListGroupItem>{product.description}</ListGroupItem>
-              </ListGroup>
-            </Col>
-            <Col md={3}>
-              <ListGroupItem>
+        </Col>
+      </Row>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Row className="p-3 my-3">
+          <Col md={5} className="mybox-shadow m-2 p-2">
+            <Image src={product.image} alt={product.name} fluid />
+          </Col>
+          <Col md={3} className="mybox-shadow m-2 p-2">
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h3>{product.name}</h3>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Rating
+                  value={product.rating}
+                  text={`${product.numReviews} reviews`}
+                />
+              </ListGroup.Item>
+              <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
+              <ListGroup.Item className="text-justify">
+                {product.description}
+              </ListGroup.Item>
+            </ListGroup>
+          </Col>
+          <Col md={3} className="mybox-shadow m-2 p-2">
+            <ListGroup variant="flush">
+              <ListGroup.Item>
                 <Row>
-                  <Col>Status:</Col>
-                  <Col>{product.countInStock > 0 ? "Instock" : "Outstock"}</Col>
+                  <Col>
+                    Status
+                    <div className="float-right">
+                      <b
+                        className={
+                          product.countInStock > 0
+                            ? "text-success"
+                            : "text-danger"
+                        }
+                      >
+                        {product.countInStock > 0 ? "Instock" : "Outstock"}
+                      </b>
+                    </div>
+                  </Col>
                 </Row>
-              </ListGroupItem>
+              </ListGroup.Item>
               {product.countInStock > 0 && (
-                <ListGroupItem>
+                <ListGroup.Item>
                   <Row>
-                    <Col>Qty</Col>{" "}
-                    <Form.Control
-                      as="select"
-                      value={qty}
-                      onChange={(e) => setQty(e.target.value)}
-                    >
-                      {[...Array(product.countInStock).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
-                        </option>
-                      ))}
-                    </Form.Control>
+                    <Col>
+                      Quantity
+                      <div className="float-right">
+                        <Form.Control
+                          as="select"
+                          value={qty}
+                          className="form-outline-none float-right"
+                          onChange={(e) => setQty(e.target.value)}
+                        >
+                          {[...Array(product.countInStock).keys()].map((x) => (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          ))}
+                        </Form.Control>
+                      </div>
+                    </Col>
                   </Row>
-                </ListGroupItem>
+                </ListGroup.Item>
               )}
               <ListGroupItem>
                 <Button
@@ -157,22 +191,25 @@ const ProductDetails = ({ match, history }) => {
                   onClick={submitReviewToggle}
                   type="button"
                   className="btn-block"
-                  ref={element}
                 >
-                  submit review
+                  Submit review
                 </Button>
+
                 {show && (
                   <>
                     <Modal show={show} onHide={submitReviewToggle}>
                       <Modal.Header closeButton>
-                        <Modal.Title>Submit Review</Modal.Title>
+                        <Modal.Title className="text-muted">
+                          Submit Review
+                        </Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
-                        <h4>Rate us</h4>
+                        <h2 className="text-muted">Rate us</h2>
                         <div>
                           {[1, 2, 3, 4, 5].map((value) => (
                             <span
                               onClick={() => setRating(value)}
+                              key={value}
                               style={{
                                 cursor: "pointer",
                                 fontSize: "3em",
@@ -183,59 +220,78 @@ const ProductDetails = ({ match, history }) => {
                             </span>
                           ))}
                         </div>
-                        <textarea
+                        <Form.Control
+                          as="textarea"
                           placeholder="Comment..."
                           rows={5}
                           cols={60}
+                          ref={commentFocus}
                           onChange={(e) => setComment(e.target.value)}
-                        ></textarea>
+                        />
                       </Modal.Body>
                       <Modal.Footer>
                         <Button
                           variant="secondary"
                           onClick={submitReviewToggle}
                         >
-                          cancel
+                          Cancel
                         </Button>
                         <Button variant="primary" onClick={submitReviewHandler}>
-                          submit
+                          Submit
                         </Button>
                       </Modal.Footer>
                     </Modal>
                   </>
                 )}
               </ListGroupItem>
-            </Col>
-          </Row>
-          {product.reviews && product.reviews[0] ? (
-            <Row style={{ width: "100%", overflow: "auto" }}>
-              {product.reviews.map((rev) => (
-                <Col>
-                  <Card>
-                    <Card.Header>{rev.name}</Card.Header>
-                    <Card.Body style={{ width: "100%", overflow: "auto" }}>
-                      <div>
-                        {[...Array(rev.rating).keys()].map(() => (
-                          <span style={{ color: "yellow" }}>
-                            <i className="fa-regular fa-star"></i>
-                          </span>
-                        ))}
-                      </div>
-                      <div>{rev.comment}</div>
-                    </Card.Body>
-                    <Card.Footer>
-                      <i className="fa-regular fa-heart"></i>
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              ))}
+            </ListGroup>
+          </Col>
+          <Col md={12}>
+            <Row className="my-3">
+              <Col>
+                <h2 className="text-center text-muted review-heading-underline">
+                  Review
+                </h2>
+              </Col>
             </Row>
-          ) : (
-            <div>No Reviews Yet</div>
-          )}
-        </div>
+            {product.reviews && product.reviews[0] ? (
+              <Row className="review-row mybox-shadow">
+                {product.reviews.map((rev) => (
+                  <Col className="review-col p-3" key={rev._id}>
+                    <Card className="mybox-shadow text-center card-layout p-1">
+                      <Card.Header>
+                        <Card.Img
+                          variant="top"
+                          src="/profile.png"
+                          alt="profile"
+                          className="review-profile-img"
+                        />
+                      </Card.Header>
+                      <Card.Title>{rev.name}</Card.Title>
+                      <Card.Body>
+                        <Card.Text>
+                          {[...Array(rev.rating).keys()].map((star) => (
+                            <i
+                              className="fas fa-star text-warning"
+                              key={star}
+                            ></i>
+                          ))}
+                        </Card.Text>
+                        <Card.Text className="text-justify">
+                          {rev.comment}
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <div className="bg-warning text-light">No Reviews Yet</div>
+            )}
+          </Col>
+        </Row>
       )}
-    </>
+    </Container>
   );
 };
 

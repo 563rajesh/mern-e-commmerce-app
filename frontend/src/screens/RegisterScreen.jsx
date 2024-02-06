@@ -38,7 +38,7 @@ const RegisterScreen = ({ location, history }) => {
     }
   }, [history, isAuthenticated, redirect, dispatch, alert, error]);
 
-  const submitHandler = (e) => {
+  const userRegisterSubmitHandler = (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -53,79 +53,82 @@ const RegisterScreen = ({ location, history }) => {
 
   return (
     <>
-      <FormContainer>
-        <h1>REGISTER</h1>
+      {loading ? (
+        <Loader />
+      ) : (
+        <FormContainer title="Register">
+          <Form onSubmit={userRegisterSubmitHandler} className="register">
+            <Form.Group controlId="role">
+              Register As:{" "}
+              {["User", "Admin"].map((userType) => (
+                <Form.Check
+                  key={userType}
+                  inline
+                  label={userType}
+                  value={userType}
+                  name="group1"
+                  type="radio"
+                  onChange={(e) => setRole(e.target.value)}
+                  required
+                  id={`disabled-default-${userType}`}
+                />
+              ))}
+            </Form.Group>
+            <Form.Group controlId="name">
+              <i className="fa-solid fa-spell-check icon"></i>
+              <Form.Control
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="email">
+              <i className="fa-solid fa-envelope icon"></i>
 
-        {loading && <Loader />}
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setImail(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="password">
+              <i className="fa-solid fa-lock icon"></i>
 
-        <Form onSubmit={submitHandler}>
-          <Form.Group controlId="role">
-            Register As:{" "}
-            {["User", "Admin"].map((userType) => (
-              <Form.Check
-                key={userType}
-                inline
-                label={userType}
-                value={userType}
-                name="group1"
-                type="radio"
-                onChange={(e) => setRole(e.target.value)}
-                required
-                id={`disabled-default-${userType}`}
-              />
-            ))}
-          </Form.Group>
-          <Form.Group controlId="name">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="enter name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Form.Group controlId="email">
-            <Form.Label>Email Address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="enter email"
-              value={email}
-              onChange={(e) => setImail(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Form.Group controlId="password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="enter password"
-              value={password}
-              ref={passwordElement}
-              onChange={(e) => setPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Form.Group controlId="confirmPassword">
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="re-enter password"
-              value={confirmPassword}
-              ref={confirmPasswordElement}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Button type="submit" variant="primary">
-            submit
-          </Button>
-        </Form>
-        <Row>
-          <Col>
-            Have an account !{" "}
-            <Link to={redirect ? `login?redirect=${redirect}` : "/login"}>
-              Login
-            </Link>
-          </Col>
-        </Row>
-      </FormContainer>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={password}
+                ref={passwordElement}
+                onChange={(e) => setPassword(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="confirmPassword">
+              <i className="fa-solid fa-check icon"></i>
+
+              <Form.Control
+                type="password"
+                placeholder="re-enter password"
+                value={confirmPassword}
+                ref={confirmPasswordElement}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+            <Button type="submit" variant="primary">
+              Submit
+            </Button>
+          </Form>
+          <Row>
+            <Col>
+              Have an account !{" "}
+              <Link to={redirect ? `login?redirect=${redirect}` : "/login"}>
+                Login
+              </Link>
+            </Col>
+          </Row>
+        </FormContainer>
+      )}
     </>
   );
 };

@@ -1,0 +1,37 @@
+/* .link-styles:link {
+    color: green;
+} */
+
+.link-styles:visited {
+    color: #7700ff;
+}
+
+.link-styles:hover {
+    opacity: 0.8;
+    /* background-color: #0077ff; */
+    /* color: white !important; */
+
+}
+
+.link-styles:active {
+    color: rgb(0, 225, 255);
+}
+
+.btn-primary:focus {
+    box-shadow: none;
+    outline: none;
+    border: none;
+}
+
+.admin-sidebar-nav {
+    transition: all 300ms;
+}
+
+.admin-sidebar-nav:hover {
+    background-color: #007bff;
+    color: aliceblue !important;
+}
+
+/* .header-nav:hover {
+    background-color: #7700ff;
+} */

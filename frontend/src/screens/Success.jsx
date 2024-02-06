@@ -1,17 +1,27 @@
 import React from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const Success = () => {
   return (
-    <div className="orderSuccess">
-      <div>
-        <i className="fas fa-check"></i>
-      </div>
-      <b>Your Order has been Placed successfully </b>
-      <br />
+    <Container>
+      <Row className="justify-content-center align-items-center h-500">
+        <Col md={4} className="text-center">
+          <div>
+            <i className="fa-solid fa-circle-check text-success"></i>
+          </div>
+          <div>
+            <b className="text-success">
+              Your Order has been Placed successfully{" "}
+            </b>
+          </div>
 
-      <Link to="/myorders">View Orders</Link>
-    </div>
+          <Link to="/myorders">
+            <span className="link-styles text-body">View Orders</span>
+          </Link>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

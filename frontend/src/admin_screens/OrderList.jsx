@@ -47,13 +47,13 @@ const OrderList = ({ history }) => {
 
   return (
     <AdminContainer>
-      <h4>All Orders</h4>
+      <h2 className="text-muted">All Orders</h2>
       {loading ? (
         <Loader />
       ) : (
         <Table striped bordered hover responsive className="table-sm">
           <thead>
-            <tr>
+            <tr className="table-info text-nowrap">
               <td>Order ID</td>
               <td>Amount</td>
               <td>Items Qty</td>
@@ -68,13 +68,20 @@ const OrderList = ({ history }) => {
                   <td>{order._id}</td>
                   <td>{order.totalPrice}</td>
                   <td>{order.orderItems.length}</td>
-                  <td>{order.orderStatus}</td>
+                  <td>
+                    <div
+                      className={
+                        order.orderStatus === "Delivered"
+                          ? "text-danger"
+                          : "text-success"
+                      }
+                    >
+                      {order.orderStatus}
+                    </div>
+                  </td>
                   <td>
                     <Link to={`/admin/order/${order._id}`}>
-                      <i
-                        className="fa fa-edit text-info"
-                        aria-hidden="true"
-                      ></i>
+                      <i className="fa fa-edit" aria-hidden="true"></i>
                     </Link>
 
                     <button

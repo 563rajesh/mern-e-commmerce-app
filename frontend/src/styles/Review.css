@@ -1,0 +1,25 @@
+/* product review submit in product details */
+.review-heading-underline::after {
+    content: "";
+    display: block;
+    width: 31vw;
+    margin-left: 30%;
+    border-bottom: 2px solid gold;
+
+}
+
+.review-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.review-col {
+    min-width: 400px;
+    min-height: 200px;
+    max-width: 600px;
+}
+
+.review-profile-img {
+    width: 100px;
+    height: 100px;
+}

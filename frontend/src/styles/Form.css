@@ -1,0 +1,61 @@
+.newproduct .form-group .form-control,
+.shipping .form-group .form-control,
+.update-product .form-group .form-control,
+.product-review .form-group .form-control,
+.search .form-control,
+.login .form-group .form-control,
+.register .form-group .form-control,
+.update-profile .form-group .form-control,
+.update-user .form-group .form-control,
+.contact-form .form-group .form-control {
+    padding: 4px;
+    padding-left: 36px;
+    margin: 10px 0 10px 0;
+    height: 40px;
+}
+
+.search .form-control {
+    margin: unset;
+    padding-right: 70px;
+}
+
+
+.form-control:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+/* for all font and bootstrap icon */
+.icon {
+    position: absolute;
+    padding: 10px;
+    min-width: 40px;
+    /* position: absolute; */
+    /* transform: translateX(1vmax); */
+    /* font-size: 1.6vmax; */
+    color: rgba(0, 0, 0, 0.623);
+}
+
+.form-outline-none:focus {
+    outline: none;
+    box-shadow: none;
+    background-color: #f1f1f1;
+
+}
+
+@media screen and (max-width:575px) {
+    .search {
+        position: relative;
+    }
+
+    .search .btn {
+        position: absolute;
+        right: 1vw;
+        padding: 3px;
+    }
+
+    .search-icon {
+        z-index: 1001;
+    }
+
+}

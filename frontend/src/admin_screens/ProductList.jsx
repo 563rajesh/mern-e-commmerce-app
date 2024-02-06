@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import AdminContainer from "./layout/AdminContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getAllProducts } from "../actions/productActions";
-import { Button, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Loader from "../components/shared/Loader";
 import { useAlert } from "react-alert";
@@ -45,15 +45,21 @@ const ProductList = ({ history }) => {
   }, [dispatch, history, isDeleted, error, deleteError, alert, message]);
   return (
     <AdminContainer>
-      <h3>All Products</h3>
+      <h2 className="text-muted">All Products</h2>
       {loading ? (
         <Loader />
       ) : (
-        <Table striped bordered hover responsive className="table-sm">
+        <Table
+          striped
+          bordered
+          hover
+          responsive
+          className="table-sm text-nowrap"
+        >
           <thead>
-            <tr>
+            <tr className="table-info">
               <td>Product ID</td>
-              <td>Name</td>
+              <td className="text-nowrap">Name</td>
               <td>Stock</td>
               <td>Price</td>
               <td>Actions</td>
@@ -62,31 +68,31 @@ const ProductList = ({ history }) => {
           <tbody>
             {products &&
               products.map((product) => (
-                <tr key={product._id}>
+                <tr
+                  key={product._id}
+                  className={product.countInStock === 0 ? "text-danger" : ""}
+                >
                   <td>{product._id}</td>
                   <td>{product.name}</td>
                   <td>{product.countInStock}</td>
                   <td>{product.price}</td>
                   <td>
                     <Link to={`/admin/product/${product._id}`}>
-                      <i
-                        className="fa fa-edit text-info"
-                        aria-hidden="true"
-                      ></i>
+                      <i className="fa fa-edit" aria-hidden="true"></i>
                     </Link>
 
-                    <Button
+                    <button
                       onClick={() => deleteProductHandler(product._id)}
                       type="button"
                       variant="light"
-                      style={{ marginLeft: "10px" }}
+                      style={{ border: "none" }}
                       disabled={loading ? true : false}
                     >
                       <i
                         className="fa fa-trash text-danger"
                         aria-hidden="true"
                       ></i>
-                    </Button>
+                    </button>
                   </td>
                 </tr>
               ))}

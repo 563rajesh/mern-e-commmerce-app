@@ -41,17 +41,17 @@ const UsersList = ({ history }) => {
 
   return (
     <AdminContainer>
-      <h3>All User</h3>
+      <h2 className="text-muted">All User</h2>
       {loading ? (
         <Loader />
       ) : (
         <Table striped bordered hover responsive className="table-sm">
           <thead>
-            <tr>
+            <tr className="table-info">
               <td>User ID</td>
               <td>Name</td>
               <td>Email</td>
-              <td>User Type</td>
+              <td className="text-nowrap">User Type</td>
               <td>Actions</td>
             </tr>
           </thead>
@@ -66,10 +66,7 @@ const UsersList = ({ history }) => {
 
                   <td>
                     <Link to={`/admin/user/${user._id}`}>
-                      <i
-                        className="fa fa-edit text-info"
-                        aria-hidden="true"
-                      ></i>
+                      <i className="fa fa-edit" aria-hidden="true"></i>
                     </Link>
 
                     <button

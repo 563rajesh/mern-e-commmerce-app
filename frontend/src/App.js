@@ -1,6 +1,4 @@
 import { useEffect } from "react";
-import { Container } from "react-bootstrap";
-import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -31,64 +29,91 @@ import Success from "./screens/Success";
 import OrderDetailsScreen from "./screens/OrderDetailsScreen";
 import store from "./store";
 import { getUserDetails } from "./actions/userAction";
+import About from "./components/About";
+import Contact from "./components/Contact";
+import NotFound from "./components/NotFound";
 function App() {
   useEffect(() => {
     store.dispatch(getUserDetails("profile"));
   }, []);
+  //stop to inspect website
+  window.addEventListener("contextmenu", (e) => e.preventDefault());
   return (
     <BrowserRouter>
       <Header />
 
       <main className="my-3">
-        <Container>
-          <Route path="/" component={HomeScreen} exact />
-          <Route path="/products/:id" component={ProductDetails} exact />
-          <Route path="/cart" component={CartScreen} exact />
-          <Route path="/login" component={LoginScreen} exact />
-          <Route path="/register" component={RegisterScreen} exact />
-          <ProtectedRoute path="/profile" component={ProfileScreen} exact />
+        <Switch>
+          <Route exact path="/" component={HomeScreen} />
+
+          <Route exact path="/product/:id" component={ProductDetails} />
+
+          <Route exact path="/cart" component={CartScreen} />
+
+          <Route exact path="/login" component={LoginScreen} />
+
+          <Route exact path="/register" component={RegisterScreen} />
+
+          <Route exact path="/about" component={About} />
+
+          <Route exact path="/contact" component={Contact} />
+
+          <ProtectedRoute exact path="/profile" component={ProfileScreen} />
+
           <ProtectedRoute
+            exact
             path="/profile/update"
             component={UpdateProfile}
-            exact
           />
-          <ProtectedRoute path="/payment" component={PaymentScreen} exact />
-          <ProtectedRoute path="/shipping" component={ShippingScreen} exact />
+
+          <ProtectedRoute exact path="/payment" component={PaymentScreen} />
+
+          <ProtectedRoute exact path="/shipping" component={ShippingScreen} />
+
           <ProtectedRoute
+            exact
             path="/placeorder"
             component={PlaceOrderScreen}
-            exact
           />
-          <Route path="/success" component={Success} exact />
-          <ProtectedRoute path="/myorders" component={ShowOrders} exact />
-          <Switch>
-            <ProtectedRoute
-              path="/order/pay"
-              component={OrderPayScreen}
-              exact
-            />
 
-            <ProtectedRoute
-              exact
-              path="/order/:id"
-              component={OrderDetailsScreen}
-            />
-          </Switch>
-        </Container>
+          <ProtectedRoute exact path="/success" component={Success} />
 
-        {/* ---------Admin route------------ */}
-        <AdminRoute path="/admin/dashboard" component={Dashboard} exact />
-        <AdminRoute path="/admin/products" component={ProductList} exact />
-        <AdminRoute path="/admin/newproduct" component={NewProduct} exact />
-        <AdminRoute exact path="/admin/product/:id" component={UpdateProduct} />
-        <AdminRoute exact path="/admin/users" component={UsersList} />
-        <AdminRoute exact path="/admin/orders" component={OrderList} />
+          <ProtectedRoute exact path="/myorders" component={ShowOrders} />
 
-        <AdminRoute exact path="/admin/order/:id" component={ProcessOrder} />
+          <ProtectedRoute exact path="/order/pay" component={OrderPayScreen} />
 
-        <AdminRoute exact path="/admin/user/:id" component={UpdateUser} />
+          <ProtectedRoute
+            exact
+            path="/order/:id"
+            component={OrderDetailsScreen}
+          />
 
-        <AdminRoute exact path="/admin/reviews" component={ProductReviews} />
+          {/*Admin route*/}
+
+          <AdminRoute exact path="/admin/dashboard" component={Dashboard} />
+
+          <AdminRoute exact path="/admin/products" component={ProductList} />
+
+          <AdminRoute exact path="/admin/newproduct" component={NewProduct} />
+
+          <AdminRoute
+            exact
+            path="/admin/product/:id"
+            component={UpdateProduct}
+          />
+
+          <AdminRoute exact path="/admin/users" component={UsersList} />
+
+          <AdminRoute exact path="/admin/orders" component={OrderList} />
+
+          <AdminRoute exact path="/admin/order/:id" component={ProcessOrder} />
+
+          <AdminRoute exact path="/admin/user/:id" component={UpdateUser} />
+
+          <AdminRoute exact path="/admin/reviews" component={ProductReviews} />
+
+          <Route component={NotFound} />
+        </Switch>
       </main>
       <Footer />
     </BrowserRouter>

@@ -6,19 +6,12 @@ import {
   getOrderDetails,
   updateOrder,
 } from "../actions/orderActions";
-import {
-  Button,
-  Form,
-  Image,
-  Col,
-  Row,
-  ListGroup,
-  Card,
-} from "react-bootstrap";
+import { Button, Form, Image, Col, Row, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Loader from "../components/shared/Loader";
 import { useAlert } from "react-alert";
 import { UPDATE_ORDER_RESET } from "../constants/orderConstants";
+import Message from "../components/shared/Message";
 
 const ProcessOrder = ({ match }) => {
   const dispatch = useDispatch();
@@ -40,6 +33,14 @@ const ProcessOrder = ({ match }) => {
     dispatch(updateOrder(orderId, { isDelivered, status }));
     setStatus("");
   };
+
+  if (!loading) {
+    order.itemsPrice =
+      order.orderItems &&
+      order.orderItems
+        .reduce((acc, item) => acc + item.price * item.qty, 0)
+        .toFixed(2);
+  }
 
   useEffect(() => {
     if (error) {
@@ -63,56 +64,92 @@ const ProcessOrder = ({ match }) => {
         <Loader />
       ) : (
         <>
-          <Row>
-            <Col md={8}>
-              <ListGroup>
+          <Row className="py-3 mb-2">
+            <Col md={7}>
+              <ListGroup variant="flush" className="mybox-shadow">
                 <ListGroup.Item>
-                  <h4>OrderId: {orderId && orderId}</h4>
+                  <h4 className="text-muted text-break">
+                    OrderId #<b>{order && orderId}</b>
+                  </h4>
                 </ListGroup.Item>
                 {order.shippingAddress && (
                   <ListGroup.Item>
-                    <h4>Shipping Info</h4>
-                    <p>
-                      {order.shippingAddress.address}&nbsp;
-                      {order.shippingAddress.city}&nbsp;
-                      {order.shippingAddress.postalCode}&nbsp;
-                      {order.shippingAddress.country}&nbsp; Mo:{" "}
-                      {order.shippingAddress.mobileNo}&nbsp;
-                    </p>
+                    <h4 className="text-muted">Shipping Info</h4>
+                    <address>
+                      <p>
+                        <strong>Name:&nbsp;</strong>
+                        <span>{order.user && order.user.name}</span>
+                      </p>
+                      <p>
+                        <strong>Email:&nbsp;</strong>
+                        <span> {order.user && order.user.email}</span>
+                      </p>
+                      <p>
+                        <strong>Address:&nbsp;</strong>
+                        {order.shippingAddress && (
+                          <span>
+                            {order.shippingAddress.address}&nbsp;
+                            {order.shippingAddress.city}&nbsp;
+                            {order.shippingAddress.postalCode}&nbsp;
+                            {order.shippingAddress.country}&nbsp;, phone:{" "}
+                            {order.shippingAddress.mobileNo}&nbsp;
+                          </span>
+                        )}
+                      </p>
+                    </address>
                   </ListGroup.Item>
                 )}
                 <ListGroup.Item>
-                  <div>Status :{order.orderStatus}</div>
-                  {order.isDeliverd ? (
-                    <div>Delivered At {order.deliveredAt}</div>
+                  <div>
+                    Status:&nbsp;
+                    <span
+                      className={
+                        order.orderStatus === "Delivered"
+                          ? "text-danger"
+                          : "text-success"
+                      }
+                    >
+                      {order.orderStatus}
+                    </span>
+                  </div>
+                  {order.orderStatus === "Delivered" ? (
+                    <div>
+                      {" "}
+                      Delivered At {order.deliveredAt.substring(0, 10)}
+                    </div>
                   ) : (
                     ""
                   )}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <h4>Payment Info</h4>
+                  <h4 className="text-muted">Payment Info</h4>
                   <p>
-                    <strong>Method :</strong>&nbsp;
-                    <strong>{order.paymentMethod}</strong>
+                    <strong>
+                      Paid Amount:&nbsp;${order.totalPrice}
+                      <span>&nbsp; | &nbsp;</span>
+                      {order.paymentMethod}
+                    </strong>
                   </p>
                   {order.isPaid ? (
-                    <div>Paid On {order.paidAt.substring(0, 10)}</div>
+                    <Message variant="success">
+                      <i className="fa-solid fa-circle-check"></i>&nbsp; Paid On{" "}
+                      {order.paidAt.substring(0, 10)}
+                    </Message>
                   ) : (
-                    <div>Not Paid</div>
+                    <Message variant="danger">Not Paid</Message>
                   )}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <h4>
-                    Your Cart{" "}
+                  <h4 className="text-muted">
                     {order.orderItems && order.orderItems.length === 1
-                      ? "Item"
-                      : "Items"}{" "}
+                      ? "Order Item"
+                      : "Order Items"}{" "}
                   </h4>
 
                   <ListGroup variant="flush">
                     {order.orderItems &&
-                      order.orderItems.map((item, index) => (
-                        <ListGroup.Item key={index}>
+                      order.orderItems.map((item) => (
+                        <ListGroup.Item key={item.product}>
                           <Row>
                             <Col md={2}>
                               <Image
@@ -122,7 +159,10 @@ const ProcessOrder = ({ match }) => {
                               ></Image>
                             </Col>
                             <Col>
-                              <Link to={`/product/${item.product}`}>
+                              <Link
+                                to={`/product/${item.product}`}
+                                className="link-styles text-body"
+                              >
                                 {item.name}
                               </Link>
                             </Col>
@@ -138,66 +178,72 @@ const ProcessOrder = ({ match }) => {
                 </ListGroup.Item>
               </ListGroup>
             </Col>
-            <Col md={4}>
-              <Card>
-                <ListGroup variant="flush">
-                  <ListGroup.Item>
-                    <h2>Order Summary</h2>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Items</Col>
-                      <Col>${order.itemsPrice}</Col>
-                    </Row>
-                    <Row>
-                      <Col>Shipping</Col>
-                      <Col>${order.shippingPrice}</Col>
-                    </Row>
-                    <Row>
-                      <Col>Tax</Col>
-                      <Col>${order.taxPrice}</Col>
-                    </Row>
-                    <Row>
-                      <Col>Total</Col>
-                      <Col>${order.totalPrice}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                </ListGroup>
-              </Card>
+            <Col md={4} className="my-md-0 my-3">
+              <ListGroup variant="flush" className="mybox-shadow">
+                <ListGroup.Item>
+                  <h4 className="text-muted">Order Summary</h4>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Subtotal</Col>
+                    <Col>$ {order.itemsPrice}</Col>
+                  </Row>
+                  <Row>
+                    <Col>Shipping</Col>
+                    <Col>$ {order.shippingPrice}</Col>
+                  </Row>
+                  <Row>
+                    <Col>Tax</Col>
+                    <Col>$ {order.taxPrice}</Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Total</Col>
+                    <Col>
+                      <b>$ {order.totalPrice}</b>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              </ListGroup>
+              <ListGroup variant="flush" className="mybox-shadow my-3 mt-4">
+                <ListGroup.Item>
+                  <h2 className="text-muted">Process Order</h2>
 
-              <Form
-                onSubmit={processOrderSubmitHandler}
-                style={{
-                  display: `${
-                    order.orderStatus === "Delivered" ? "none" : "block"
-                  }`,
-                }}
-              >
-                <h3>Process Order</h3>
-                <Form.Group controlId="processorder">
-                  <Form.Control
-                    as="select"
-                    onChange={(e) => setStatus(e.target.value)}
-                    value={status}
+                  <Form
+                    onSubmit={processOrderSubmitHandler}
+                    className={
+                      order.orderStatus === "Delivered"
+                        ? "d-none"
+                        : "d-block my-3"
+                    }
                   >
-                    <option value="">Choose Status</option>
-                    {order && order.orderStatus === "Processing" && (
-                      <option value="Shipped">Shipped</option>
-                    )}
-                    {order && order.orderStatus === "Shipped" && (
-                      <option value="Delivered">Delivered</option>
-                    )}
-                  </Form.Control>
-                </Form.Group>
-                <Button
-                  type="submit"
-                  disabled={
-                    loading ? true : false || status === "" ? true : false
-                  }
-                >
-                  Process
-                </Button>
-              </Form>
+                    <Form.Group controlId="process-order">
+                      <Form.Control
+                        as="select"
+                        onChange={(e) => setStatus(e.target.value)}
+                        value={status}
+                      >
+                        <option value="">Choose Status</option>
+                        {order && order.orderStatus === "Processing" && (
+                          <option value="Shipped">Shipped</option>
+                        )}
+                        {order && order.orderStatus === "Shipped" && (
+                          <option value="Delivered">Delivered</option>
+                        )}
+                      </Form.Control>
+                    </Form.Group>
+                    <Button
+                      type="submit"
+                      disabled={
+                        loading ? true : false || status === "" ? true : false
+                      }
+                    >
+                      Process
+                    </Button>
+                  </Form>
+                </ListGroup.Item>
+              </ListGroup>
             </Col>
           </Row>
         </>

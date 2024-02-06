@@ -4,7 +4,8 @@ import {
   getUserDetails,
   updateProfile,
 } from "../actions/userAction";
-import { Form, Button, Row } from "react-bootstrap";
+import FormContainer from "../components/shared/FormContainer";
+import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/shared/Loader";
 import { useAlert } from "react-alert";
@@ -54,49 +55,52 @@ const UpdateProfile = ({ history }) => {
 
   return (
     <>
-      <h4 style={{ wordWrap: "break-word", textAlign: "center" }}>
-        Update Profile
-      </h4>
-
       {loading ? (
         <Loader />
       ) : (
-        <Row className="justify-content-md-center">
-          <Form onSubmit={updateProfileSubmitHandler}>
+        <FormContainer title="Update profile">
+          <Form
+            onSubmit={updateProfileSubmitHandler}
+            className="update-profile"
+          >
             <Form.Group controlId="name">
-              <Form.Label>Name</Form.Label>
+              <i className="fa-solid fa-spell-check icon"></i>
+
               <Form.Control
                 type="text"
                 required
-                placeholder="enter name"
+                placeholder="Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="email">
-              <Form.Label>Email Address</Form.Label>
+              <i className="fa-solid fa-envelope icon"></i>
+
               <Form.Control
                 type="email"
                 required
-                placeholder="enter email"
+                placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="password">
-              <Form.Label>Password</Form.Label>
+              <i className="fa-solid fa-lock icon"></i>
+
               <Form.Control
                 type="password"
-                placeholder="enter password"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="confirmPassword">
-              <Form.Label>Confirm Password</Form.Label>
+              <i className="fa-solid fa-check icon"></i>
+
               <Form.Control
                 type="password"
-                placeholder="re-enter password"
+                placeholder="Re-enter password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               ></Form.Control>
@@ -108,10 +112,10 @@ const UpdateProfile = ({ history }) => {
               className="btn-block"
               disabled={updateLoading}
             >
-              update
+              Update
             </Button>
           </Form>
-        </Row>
+        </FormContainer>
       )}
     </>
   );

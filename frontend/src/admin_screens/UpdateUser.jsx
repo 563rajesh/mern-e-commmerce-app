@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AdminContainer from "./layout/AdminContainer";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, getSingleUser, updateUser } from "../actions/userAction";
 import Loader from "../components/shared/Loader";
@@ -58,43 +58,55 @@ const UpdateUser = ({ history, match }) => {
       {loading ? (
         <Loader />
       ) : (
-        <Form onSubmit={updateUserSubmitHandler}>
-          <Form.Group controlId="name">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="Enter name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Form.Group controlId="email">
-            <Form.Label>Email Address</Form.Label>
-            <Form.Control
-              required
-              type="email"
-              placeholder="Enter email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Form.Group controlId="role">
-            <Form.Control
-              as="select"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="">Choose Role</option>
-              <option value="Admin">Admin</option>
-              <option value="User">User</option>
-            </Form.Control>
-          </Form.Group>
+        <Row className="justify-content-md-center  align-items-md-center m-3 h-500">
+          <Col md={4} className="mybox-shadow p-3">
+            <h2 className="text-center text-muted">Update User</h2>
+            <Form onSubmit={updateUserSubmitHandler} className="update-user">
+              <Form.Group controlId="name">
+                <i className="fa-solid fa-person icon"></i>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Enter name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group controlId="email">
+                <i className="fa-solid fa-envelope icon"></i>
+                <Form.Control
+                  required
+                  type="email"
+                  placeholder="Enter email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group controlId="role">
+                <i className="fa-solid fa-user-check icon"></i>
 
-          <Button type="submit" variant="primary" disabled={updateLoading}>
-            update
-          </Button>
-        </Form>
+                <Form.Control
+                  as="select"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                >
+                  <option value="">Choose Role</option>
+                  <option value="Admin">Admin</option>
+                  <option value="User">User</option>
+                </Form.Control>
+              </Form.Group>
+
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={updateLoading}
+                className="btn-block"
+              >
+                Update
+              </Button>
+            </Form>
+          </Col>
+        </Row>
       )}
     </AdminContainer>
   );

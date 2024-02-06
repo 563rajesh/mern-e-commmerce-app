@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import AdminContainer from "./layout/AdminContainer";
 import { useDispatch, useSelector } from "react-redux";
-import { ListGroup, Row } from "react-bootstrap";
 import { getAllProducts } from "../actions/productActions";
 import { getAllUsers } from "../actions/userAction";
 import { getAllOrders } from "../actions/orderActions";
@@ -35,22 +34,27 @@ const Dashboard = () => {
   }, [dispatch]);
   return (
     <AdminContainer>
-      <h3>Dashboard</h3>
-      <Row className="justify-content-center">
-        <ListGroup>
-          <ListGroup.Item>
-            <div>amount {totalAmount}</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>{products && products.length}</div>
-            <div>{orders && orders.length}</div>
-            <div>{users && users.length}</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>{outOfStock}</div>
-          </ListGroup.Item>
-        </ListGroup>
-      </Row>
+      <div className="mb-4">
+        <h2 className="text-muted">Dashboard</h2>
+        <div className="dashboard-1 pt-2 text-center pb-2 text-white">
+          Total Amount ${totalAmount}
+        </div>
+
+        <div className="dashboard-2  text-white m-3">
+          <div className="dashboard-2-1 text-center p-5 m-1">
+            {products && products.length} Products
+          </div>
+          <div className="dashboard-2-2 text-center p-5 m-1 ">
+            {orders && orders.length} Orders
+          </div>
+          <div className="dashboard-2-3 text-center p-5 m-1">
+            {users && users.length} &nbsp;Users
+          </div>
+        </div>
+        <div className="dashboard-3-1 text-center text-white pt-2 pb-2">
+          {outOfStock} Out of stock
+        </div>
+      </div>
     </AdminContainer>
   );
 };

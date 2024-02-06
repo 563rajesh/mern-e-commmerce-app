@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AdminContainer from "./layout/AdminContainer";
 import { useDispatch, useSelector } from "react-redux";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import {
   clearErrors,
   listProductDetails,
@@ -95,94 +95,110 @@ const UpdateProduct = ({ history, match }) => {
   ]);
   return (
     <AdminContainer>
-      <h3>Update product</h3>
-      <Form onSubmit={updateProductSubmitHandler}>
-        <Form.Group controlId="productname">
-          <Form.Control
-            type="text"
-            placeholder="Product name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
-        <Form.Label>
-          <i className="fa-regular fa-star"></i>
-        </Form.Label>
-        <Form.Group controlId="price">
-          <Form.Control
-            type="Number"
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
-        <Form.Group controlId="countInStock">
-          <Form.Control
-            type="Number"
-            value={countInStock}
-            placeholder="Stock"
-            onChange={(e) => setCountInStock(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
-        <Form.Group controlId="description">
-          <Form.Control
-            as="textarea"
-            placeholder="Product Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={1}
-            cols={30}
-            required
-          ></Form.Control>
-        </Form.Group>
-        <Form.Group controlId="category">
-          <Form.Label>
-            <i className="fa-regular fa-category"></i>
-          </Form.Label>
-          <Form.Control
-            as="select"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
+      <Row className="justify-content-md-center m-3 h-500 align-items-md-center">
+        <Col md={4} className="mybox-shadow p-3">
+          <h2 className="text-muted text-center">Update Product</h2>
+          <Form
+            onSubmit={updateProductSubmitHandler}
+            className="update-product"
           >
-            <option value="">Choose Category</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="brand">
-          <Form.Control
-            type="text"
-            placeholder="Product Brand"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
-        <Form.Group controlId="image">
-          <Form.Control
-            type="text"
-            placeholder="Product Image"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
+            <Form.Group controlId="productname">
+              <i className="fa-solid fa-spell-check icon"></i>
 
-        <Button
-          variant="primary"
-          type="submit"
-          disabled={loading ? true : false}
-        >
-          Update Product
-        </Button>
-      </Form>
+              <Form.Control
+                type="text"
+                placeholder="Product name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="price">
+              <i className="fa-solid fa-dollar-sign icon"></i>
+              <Form.Control
+                type="Number"
+                placeholder="Price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                required
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="countInStock">
+              <i className="fa-solid fa-warehouse icon"></i>
+
+              <Form.Control
+                type="Number"
+                value={countInStock}
+                placeholder="Stock"
+                onChange={(e) => setCountInStock(e.target.value)}
+                required
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="description">
+              <i className="fa-regular fa-note-sticky icon"></i>
+
+              <Form.Control
+                as="textarea"
+                placeholder="Product Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={1}
+                cols={30}
+                required
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="category">
+              <i className="fa-solid fa-list icon"></i>
+
+              <Form.Control
+                as="select"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+              >
+                <option value="">Choose Category</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="brand">
+              <i className="fa-regular fa-copyright icon"></i>
+
+              <Form.Control
+                type="text"
+                placeholder="Product Brand"
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+                required
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="image">
+              <i className="fa-regular fa-image icon"></i>
+
+              <Form.Control
+                type="text"
+                placeholder="Product Image"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+                required
+              ></Form.Control>
+            </Form.Group>
+
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={loading ? true : false}
+              className="btn-block"
+            >
+              Update Product
+            </Button>
+          </Form>
+        </Col>
+      </Row>
     </AdminContainer>
   );
 };

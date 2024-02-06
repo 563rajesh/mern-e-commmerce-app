@@ -1,0 +1,47 @@
+.dashboard-1 {
+    background-color: blueviolet;
+    width: 100%;
+    display: block;
+}
+
+.dashboard-2 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.dashboard-2>div {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+}
+
+.dashboard-2-1 {
+    background-color: rgba(255, 0, 0, 0.456);
+}
+
+.dashboard-2-2 {
+    background-color: blue;
+}
+
+.dashboard-2-3 {
+    background-color: blueviolet;
+}
+
+.dashboard-3-1 {
+    background-color: red;
+
+}
+
+@media screen and (max-width:768px) {
+    .dashboard-2 {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+
+}

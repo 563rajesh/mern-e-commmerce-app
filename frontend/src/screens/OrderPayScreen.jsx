@@ -5,6 +5,7 @@ import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import { useAlert } from "react-alert";
 import Loader from "../components/shared/Loader";
+import { Col, Container, Row } from "react-bootstrap";
 
 const OrderPayScreen = ({ history }) => {
   const order = JSON.parse(sessionStorage.getItem("orderInfo"));
@@ -29,6 +30,7 @@ const OrderPayScreen = ({ history }) => {
     order.paymentMethod = paymentMethod;
     dispatch(createOrder(order));
     history.push("/success");
+    sessionStorage.removeItem("orderInfo");
   };
 
   useEffect(() => {
@@ -54,17 +56,24 @@ const OrderPayScreen = ({ history }) => {
   }, [alert, orderCreateError, dispatch]);
 
   return (
-    <>
-      <h4>pay {order.totalPrice}</h4>
-      {!apiClientId ? (
-        <Loader />
-      ) : (
-        <PayPalButton
-          amount={order.totalPrice}
-          onSuccess={successPaymentHandler}
-        />
-      )}
-    </>
+    <Container>
+      <Row
+        className="justify-content-center align-items-center "
+        style={{ height: "500px" }}
+      >
+        <Col md={3}>
+          <h4 className="text-muted text-center">Pay {order.totalPrice}</h4>
+          {!apiClientId ? (
+            <Loader />
+          ) : (
+            <PayPalButton
+              amount={order.totalPrice}
+              onSuccess={successPaymentHandler}
+            />
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

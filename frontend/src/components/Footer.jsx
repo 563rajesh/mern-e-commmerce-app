@@ -5,9 +5,9 @@ const Footer = () => {
   return (
     <>
       <footer>
-        <Container style={{ background: "#000", color: "white" }} fluid>
-          <Row>
-            <Col className="text-center">
+        <Container fluid>
+          <Row className="footer">
+            <Col className="text-center text-white bg-primary">
               <span>Copyright &copy; Rajesh</span>
             </Col>
           </Row>
