@@ -27,7 +27,8 @@
 }
 
 .products-row {
-    min-height: 640px;
+    min-height: 660px;
+
     /* min-height: calc(100% - 80px); */
 }
 

@@ -6,6 +6,7 @@ const createOrder = asyncHandler(async (req, res) => {
   const {
     orderItems,
     shippingAddress,
+    shippingPrice,
     paymentMethod,
     itemPrice,
     taxPrice,
@@ -22,6 +23,7 @@ const createOrder = asyncHandler(async (req, res) => {
       user: req.user._id,
       orderItems,
       shippingAddress,
+      shippingPrice,
       paymentMethod,
       itemPrice,
       taxPrice,
@@ -80,20 +82,20 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   order.isDelivered = req.body.isDelivered;
 
   if (order.orderStatus === "Shipped") {
-    order.orderItems.map(async (order) => {
-      await updateStock(order.product, order.qty);
-    });
+    order.orderItems.map(
+      async (order) => await updateStock(order.product, order.qty)
+    );
   }
   if (order.orderStatus === "Delivered") {
     order.deliveredAt = Date.now();
   }
-  await order.save();
+  await order.save({ validateBeforeSave: false });
   res.status(200).json({ success: true });
 });
 async function updateStock(id, qty) {
   const product = await Product.findById(id);
   product.countInStock -= qty;
-  await product.save();
+  await product.save({ validateBeforeSave: false });
 }
 
 //delete order - admin

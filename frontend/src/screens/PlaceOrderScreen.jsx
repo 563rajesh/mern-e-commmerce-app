@@ -68,7 +68,7 @@ const PlaceOrderScreen = ({ history }) => {
                     </p>
                     <p>
                       <span>Address: &nbsp;</span>
-                      <span className="float-right">{address}</span>
+                      <span>{address}</span>
                     </p>
                   </address>
                 </Col>
@@ -111,21 +111,21 @@ const PlaceOrderScreen = ({ history }) => {
             <ListGroup.Item>
               <Row>
                 <Col>Subtotal</Col>
-                <Col>${itemsPrice}</Col>
+                <Col>$ {itemsPrice}</Col>
               </Row>
               <Row>
                 <Col>Shipping Charges</Col>
-                <Col>${shippingPrice}</Col>
+                <Col>$ {shippingPrice}</Col>
               </Row>
               <Row>
                 <Col>Tax</Col>
-                <Col>${taxPrice}</Col>
+                <Col>$ {taxPrice}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
                 <Col>Total</Col>
-                <Col>${totalPrice}</Col>
+                <Col>$ {totalPrice}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>

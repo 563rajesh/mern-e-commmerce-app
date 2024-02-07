@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const Order = require("./models/OrderModel");
 const User = require("./models/UserModel");
