@@ -7,7 +7,7 @@
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "backend.js" },
+    { "src": "/api/(.*)", "dest": "backend/server.js" },
     { "src": "/(.*)", "dest": "frontedn/build/index.html" }
   ]
 }
