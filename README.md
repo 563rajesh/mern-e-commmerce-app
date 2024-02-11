@@ -1,17 +1,74 @@
-# ecommerce-mern-project-starter-code
-complete ecommerce app project 2023
 
-# watch videos on youtube channel
-https://youtube.com/playlist?list=PLuHGmgpyHfRw6vj1vd_Pf0Zjd2muTvjI5
+# Project Title
+
+This Project sell products online to customer
 
 
-# you can fork or download as zip
-- after fork or zip open roo path in CMD or Terminal and run this command
+## Tech Stack
 
-# npm install
+**Client:** React, Redux, Bootstrap
 
-- also run same command in clinet path in CMD or Terminal
+**Server:** Node, Express
 
-- it will download all dependencies of project later you dont need to downloadany dependencies
 
-# please give credit add our channel name or channel link
+## Installation
+
+Install my-project with npm
+
+```bash
+  npm install my-project
+  cd my-project
+```
+    
+## Contributing
+
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+
+    1) Fork the Project
+
+    2) Create your Feature Branch (git checkout -b feature/AmazingFeature)
+
+    3) Commit your Changes (git commit -m 'Add some AmazingFeature')
+    
+    4) Push to the Branch (git push origin feature/AmazingFeature)
+
+    3) Open a Pull Request
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`PORT`
+
+`DATABASE_URI`
+
+`NODE_ENV`
+
+`JWT_KEY`
+
+`JWT_EXPIRE`
+
+`COOKIE_EXPIRE`
+
+`PAYPAL_CLIENT_ID`
+
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+
+## 🚀 About Me
+I'm a full stack developer...
+
+
+## 🔗 Links
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rajesh-kumar-888358243/)
+
+
+
+## Authors
+
+- [@rajeshkumar](https://www.github.com/563rajesh)
+
