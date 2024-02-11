@@ -18,6 +18,11 @@ const LoginScreen = ({ location, history }) => {
   );
   const redirect = location.search ? location.search.split("=")[1] : "/profile";
 
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(login(email, password));
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       history.push(redirect);
@@ -29,12 +34,6 @@ const LoginScreen = ({ location, history }) => {
     }
   }, [dispatch, history, isAuthenticated, redirect, alert, error]);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    //dispatch
-    dispatch(login(email, password));
-  };
-
   return (
     <>
       {loading ? (
@@ -43,7 +42,7 @@ const LoginScreen = ({ location, history }) => {
         <FormContainer title="SIGNIN">
           <Form onSubmit={submitHandler} className="login">
             <Form.Group controlId="email">
-              <i className="fa-solid fa-envelope icon"></i>
+              <i className="fa-solid fa-user icon"></i>
               <Form.Control
                 type="email"
                 placeholder="Email"

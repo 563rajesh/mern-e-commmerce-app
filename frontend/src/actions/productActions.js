@@ -31,7 +31,7 @@ import {
 } from "../constants/productConstant";
 
 export const listProducts =
-  //provide default as if arg not passed ex-for admin
+  //provide default as if arg not passed eg-for admin
 
 
     (
@@ -39,15 +39,16 @@ export const listProducts =
       price = 0,
       selectedCategory = "",
       page = 1,
-      rating = 0
+      rating = 0,
+      pageSize = 10
     ) =>
     async (dispatch) => {
       try {
         dispatch({ type: PRODUCT_LIST_REQUEST });
 
-        let link = `/api/products?query=${searchQuery}&price=${price}&rating=${rating}&page=${page}`;
+        let link = `/api/products?query=${searchQuery}&price=${price}&rating=${rating}&page=${page}&pageSize${pageSize}`;
         if (selectedCategory) {
-          link = `/api/products?query=${searchQuery}&price=${price}&rating=${rating}&category=${selectedCategory}&page=${page}`;
+          link = `/api/products?query=${searchQuery}&price=${price}&rating=${rating}&category=${selectedCategory}&page=${page}&pageSize${pageSize}`;
         }
 
         const { data } = await axios.get(link);

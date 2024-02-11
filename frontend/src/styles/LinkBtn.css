@@ -7,7 +7,8 @@
 }
 
 .link-styles:hover {
-    opacity: 0.8;
+    /* opacity: 0.8; */
+    font-weight: 500;
     /* background-color: #0077ff; */
     /* color: white !important; */
 

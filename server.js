@@ -1,12 +1,12 @@
 const express = require("express");
 const path = require("path");
 require("colors");
-const { errorHandler } = require("./middlewares/errorMiddleware");
+const { errorHandler } = require("./backend/middlewares/errorMiddleware");
 const cookieParser = require("cookie-parser");
-const connectDb = require("./config/database");
-const productRoutes = require("./routes/ProductsRoute");
-const usersController = require("./routes/usersRoutes");
-const orderRoute = require("./routes/orderRoute");
+const connectDb = require("./backend/config/database");
+const productRoutes = require("./backend/routes/ProductsRoute");
+const usersController = require("./backend/routes/usersRoutes");
+const orderRoute = require("./backend/routes/orderRoute");
 
 //dotenv config
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -24,14 +24,15 @@ app.use("/api", productRoutes);
 app.use("/api", usersController);
 app.use("/api", orderRoute);
 
+//payment api
 app.get("/api/config/paypal", (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID);
 });
 
-app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.use(express.static(path.join(__dirname, "./frontend/build")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+  res.sendFile(path.resolve(__dirname, "./frontend/build/index.html"));
 });
 
 //Middleware for error

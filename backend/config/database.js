@@ -15,7 +15,7 @@ const connectDb = async () => {
         )
     );
   } catch (error) {
-    console.log(`Error:${error.message}`.red);
+    console.error(`Error:${error.message}`.red);
     process.exit(-1);
   }
 };

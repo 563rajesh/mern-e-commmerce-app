@@ -13,7 +13,6 @@ const RegisterScreen = ({ location, history }) => {
   const [email, setImail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("");
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
@@ -27,6 +26,41 @@ const RegisterScreen = ({ location, history }) => {
     (state) => state.user
   );
 
+  const inputs = document.querySelectorAll(
+    ".register .form-group .form-control"
+  );
+  inputs.forEach((input) => {
+    input.classList.remove("form-error", "form-success");
+  });
+
+  const userRegisterSubmitHandler = (e) => {
+    e.preventDefault();
+
+    if (!name || !email || !password) {
+      alert.error("Please provide all information");
+
+      inputs.forEach((input) => {
+        if (!input.value) {
+          input.classList.add("form-error");
+        } else {
+          input.classList.add("form-success");
+          input.classList.remove("form-error");
+        }
+      });
+      return;
+    }
+    if (password !== confirmPassword) {
+      alert.error("Password do not match");
+      confirmPasswordElement.current.focus();
+      //we have to implement eye feature
+      setConfirmPassword("");
+      return;
+    }
+    dispatch(register(name, email, password));
+    inputs.forEach((input) => {
+      input.classList.remove("form-error", "form-success");
+    });
+  };
   useEffect(() => {
     if (error) {
       alert.error(error);
@@ -38,19 +72,6 @@ const RegisterScreen = ({ location, history }) => {
     }
   }, [history, isAuthenticated, redirect, dispatch, alert, error]);
 
-  const userRegisterSubmitHandler = (e) => {
-    e.preventDefault();
-
-    if (password !== confirmPassword) {
-      alert.error("Password do not match");
-      passwordElement.current.focus();
-      passwordElement.current.value = "";
-      confirmPasswordElement.current.value = "";
-    } else {
-      dispatch(register(name, email, password, role));
-    }
-  };
-
   return (
     <>
       {loading ? (
@@ -58,22 +79,6 @@ const RegisterScreen = ({ location, history }) => {
       ) : (
         <FormContainer title="Register">
           <Form onSubmit={userRegisterSubmitHandler} className="register">
-            <Form.Group controlId="role">
-              Register As:{" "}
-              {["User", "Admin"].map((userType) => (
-                <Form.Check
-                  key={userType}
-                  inline
-                  label={userType}
-                  value={userType}
-                  name="group1"
-                  type="radio"
-                  onChange={(e) => setRole(e.target.value)}
-                  required
-                  id={`disabled-default-${userType}`}
-                />
-              ))}
-            </Form.Group>
             <Form.Group controlId="name">
               <i className="fa-solid fa-spell-check icon"></i>
               <Form.Control

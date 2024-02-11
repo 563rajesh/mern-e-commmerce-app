@@ -46,7 +46,7 @@ const PlaceOrderScreen = ({ history }) => {
   return (
     <Container>
       <CheckoutStep step1 step2 />
-      <Row className="justify-content-md-center my-4">
+      <Row className="justify-content-md-center my-5">
         <Col md={7}>
           <ListGroup variant="flush">
             <h4 className="text-muted">Shipping Info</h4>
@@ -104,7 +104,7 @@ const PlaceOrderScreen = ({ history }) => {
           </ListGroup>
         </Col>
         <Col md={4}>
-          <ListGroup variant="flush" className="mybox-shadow">
+          <ListGroup variant="flush" className="mybox-shadow order-summary">
             <ListGroup.Item>
               <h4 className="text-muted">Order Summary</h4>
             </ListGroup.Item>

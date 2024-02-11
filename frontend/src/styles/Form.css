@@ -25,6 +25,14 @@
     outline: none;
 }
 
+.form-error {
+    border: 1px solid #ff004cd6;
+}
+
+.form-success {
+    border: 1px solid rgba(49, 181, 26, 0.818);
+}
+
 /* for all font and bootstrap icon */
 .icon {
     position: absolute;

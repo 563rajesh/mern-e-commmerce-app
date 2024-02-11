@@ -55,8 +55,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 const getProducts = asyncHandler(async (req, res) => {
   const productsCount = await Product.countDocuments();
 
-  const pageSize = 5;
-  const { query, category, price, page, rating } = req.query;
+  const { query, category, price, page, rating, pageSize } = req.query;
   const filter = {};
 
   if (query) filter.name = { $regex: new RegExp(query, "i") };

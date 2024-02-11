@@ -16,7 +16,7 @@ const PaymentScreen = ({ history }) => {
   return (
     <Container>
       <CheckoutStep step1 step2 step3 />
-      <Row className="justify-content-center">
+      <Row className="justify-content-center pt-5">
         <Form onSubmit={submitHandler}>
           <Form.Group>
             <Form.Label as="legend">Select Payment Method</Form.Label>

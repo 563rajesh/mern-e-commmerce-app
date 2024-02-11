@@ -37,7 +37,7 @@ function App() {
     store.dispatch(getUserDetails("profile"));
   }, []);
   //stop to inspect website
-  window.addEventListener("contextmenu", (e) => e.preventDefault());
+  // window.addEventListener("contextmenu", (e) => e.preventDefault());
   return (
     <BrowserRouter>
       <Header />

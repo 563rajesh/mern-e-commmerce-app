@@ -38,6 +38,7 @@ const HomeScreen = ({ location }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [page, setPage] = useState(1);
   const [ratings, setRatings] = useState(0);
+  let pageSize = 10;
 
   let searchQuery;
   if (location.search) {
@@ -45,7 +46,7 @@ const HomeScreen = ({ location }) => {
   }
   const lastPageHandler = () => {
     if (!loading) {
-      let lastP = Math.ceil(filteredProductsCount / 5);
+      let lastP = Math.ceil(filteredProductsCount / pageSize);
       setPage(lastP);
     }
   };
@@ -62,7 +63,16 @@ const HomeScreen = ({ location }) => {
       alert.error(error);
       dispatch(clearErrors());
     }
-    dispatch(listProducts(searchQuery, price, selectedCategory, page, ratings));
+    dispatch(
+      listProducts(
+        searchQuery,
+        price,
+        selectedCategory,
+        page,
+        ratings,
+        pageSize
+      )
+    );
   }, [
     dispatch,
     error,
@@ -72,6 +82,7 @@ const HomeScreen = ({ location }) => {
     page,
     selectedCategory,
     ratings,
+    pageSize,
   ]);
   return (
     <Container fluid>
@@ -150,8 +161,8 @@ const HomeScreen = ({ location }) => {
 
               <ListGroup.Item>
                 <Button as="div" className="btn-block ">
-                  {page} of {!loading && Math.ceil(filteredProductsCount / 5)}{" "}
-                  page
+                  {page} of{" "}
+                  {!loading && Math.ceil(filteredProductsCount / pageSize)} page
                 </Button>
                 <ButtonGroup size="sm">
                   <Button
@@ -175,7 +186,7 @@ const HomeScreen = ({ location }) => {
                     type="button"
                     onClick={() => setPage((p) => p + 1)}
                     variant="light"
-                    disabled={page * 5 >= filteredProductsCount}
+                    disabled={page * pageSize >= filteredProductsCount}
                   >
                     Next
                   </Button>
@@ -183,7 +194,7 @@ const HomeScreen = ({ location }) => {
                     type="button"
                     onClick={lastPageHandler}
                     variant="light"
-                    disabled={page * 5 >= filteredProductsCount}
+                    disabled={page * pageSize >= filteredProductsCount}
                   >
                     Last
                   </Button>
@@ -192,7 +203,14 @@ const HomeScreen = ({ location }) => {
             </ListGroup>
           </Col>
           <Col md={9} className="pb-5">
-            <Row className="align-content-md-between products-row">
+            <Row
+              className={
+                filteredProductsCount === 1
+                  ? ""
+                  : "align-content-md-between products-row"
+              }
+              id="products-row"
+            >
               {products &&
                 products.map((product) => {
                   return (
