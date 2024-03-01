@@ -26,11 +26,7 @@ const ProfileScreen = () => {
         <Container>
           <Row>
             <Col md={4}>
-              <Image
-                src={user.avatar.url ? user.avatar.url : "/Profile.png"}
-                fluid
-                alt={user.name}
-              />
+              <Image src="/Profile.png" fluid />
             </Col>
             <Col md={7}>
               <ListGroup variant="flush">
