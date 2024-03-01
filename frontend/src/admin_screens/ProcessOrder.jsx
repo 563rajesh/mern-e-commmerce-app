@@ -208,7 +208,7 @@ const ProcessOrder = ({ match }) => {
               </ListGroup>
               <ListGroup variant="flush" className="mybox-shadow my-3 mt-4">
                 <ListGroup.Item>
-                  <h2 className="text-muted">Process Order</h2>
+                  <h4 className="text-muted">Process Order</h4>
 
                   <Form
                     onSubmit={processOrderSubmitHandler}

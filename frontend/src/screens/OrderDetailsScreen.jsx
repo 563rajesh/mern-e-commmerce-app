@@ -35,16 +35,17 @@ const OrderDetailsScreen = ({ match }) => {
     <Loader />
   ) : (
     <Container>
-      <Row className="mb-5">
+      <h2 className="text-muted text-center">Order Details</h2>
+      <Row className="mb-5 mt-3">
         <Col md={7}>
           <ListGroup variant="flush" className="mybox-shadow">
             <ListGroup.Item>
-              <h2 className="text-muted text-break">
+              <h4 className="text-muted text-break">
                 OrderId #<b>{order && orderId}</b>
-              </h2>
+              </h4>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h2 className="text-muted">Shipping Info</h2>
+              <h4 className="text-muted">Shipping Info</h4>
               <address>
                 <p>
                   <strong>Name:&nbsp;</strong>
@@ -74,7 +75,9 @@ const OrderDetailsScreen = ({ match }) => {
                   order.orderStatus === "Delivered" ? "danger" : "primary"
                 }
               >
-                Status- <b>{order.orderStatus && order.orderStatus}</b>
+                <em>
+                  Status- <b>{order.orderStatus && order.orderStatus}</b>
+                </em>
                 {order.orderStatus === "Delivered" && (
                   <span>
                     {" "}
@@ -84,7 +87,7 @@ const OrderDetailsScreen = ({ match }) => {
               </Message>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h2 className="text-muted">Payment Info</h2>
+              <h4 className="text-muted">Payment Info</h4>
               <p>
                 <strong>
                   Paid Amount:&nbsp;${order.totalPrice}
@@ -102,11 +105,11 @@ const OrderDetailsScreen = ({ match }) => {
               )}
             </ListGroup.Item>
             <ListGroup.Item>
-              <h2 className="text-muted">
+              <h4 className="text-muted">
                 {order.orderItems && order.orderItems.length === 1
                   ? "Order Item"
                   : "Order Items"}{" "}
-              </h2>
+              </h4>
               {order.orderItems && (
                 <ListGroup variant="flush" className="mybox-shadow">
                   {order.orderItems &&
@@ -144,7 +147,7 @@ const OrderDetailsScreen = ({ match }) => {
         <Col md={4} className="mt-sm-2 mt-md-0">
           <ListGroup variant="flush" className="mybox-shadow">
             <ListGroup.Item>
-              <h2 className="text-muted">Order Summary</h2>
+              <h4 className="text-muted">Order Summary</h4>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>

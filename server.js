@@ -4,9 +4,12 @@ require("colors");
 const { errorHandler } = require("./backend/middlewares/errorMiddleware");
 const cookieParser = require("cookie-parser");
 const connectDb = require("./backend/config/database");
-const productRoutes = require("./backend/routes/ProductsRoute");
-const usersController = require("./backend/routes/usersRoutes");
-const orderRoute = require("./backend/routes/orderRoute");
+const productsRoute = require("./backend/routes/productsRoute");
+const usersRoute = require("./backend/routes/usersRoute");
+const ordersRoute = require("./backend/routes/ordersRoute");
+const fileUpload = require("express-fileupload");
+const cloudinary = require("cloudinary");
+const bodyParser = require("body-parser");
 
 //dotenv config
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -15,14 +18,22 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 
 //connecting database
 connectDb();
+//connecting cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload());
 
-app.use("/api", productRoutes);
-app.use("/api", usersController);
-app.use("/api", orderRoute);
+app.use("/api", productsRoute);
+app.use("/api", usersRoute);
+app.use("/api", ordersRoute);
 
 //payment api
 app.get("/api/config/paypal", (req, res) => {

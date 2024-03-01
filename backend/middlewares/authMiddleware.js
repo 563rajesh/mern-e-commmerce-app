@@ -16,7 +16,7 @@ const protect = asyncHandler(async (req, res, next) => {
     }
   else {
     res.status(404);
-    throw new Error("Not Authorized , Not Token");
+    throw new Error("Please login to access this");
   }
 });
 
@@ -26,7 +26,7 @@ const isAdmin = asyncHandler(async (req, res, next) => {
     next();
   } else {
     res.status(401);
-    throw new Error("Unauthorize user");
+    throw new Error("Not Admin");
   }
 });
 

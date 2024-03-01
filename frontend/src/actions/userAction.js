@@ -64,15 +64,11 @@ export const login = (email, password) => async (dispatch) => {
     });
   }
 };
-export const register = (name, email, password) => async (dispatch) => {
+export const register = (userData) => async (dispatch) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
     const config = { headers: { "Content-Type": "application/json" } };
-    const { data } = await axios.post(
-      "/api/register",
-      { name, email, password },
-      config
-    );
+    const { data } = await axios.post("/api/register", userData, config);
     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

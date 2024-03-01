@@ -70,11 +70,14 @@ const OrderList = ({ history }) => {
                   <td>{order.orderItems.length}</td>
                   <td>
                     <div
-                      className={
-                        order.orderStatus === "Delivered"
-                          ? "text-danger"
-                          : "text-success"
+                      className={`
+                      ${
+                        order.orderStatus === "Processing"
+                          ? "text-success"
+                          : "text-primary"
                       }
+                    ${order.orderStatus === "Delivered" ? "text-danger" : ""}
+                    `}
                     >
                       {order.orderStatus}
                     </div>

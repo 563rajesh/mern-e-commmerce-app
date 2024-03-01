@@ -5,7 +5,7 @@ import {
   updateProfile,
 } from "../actions/userAction";
 import FormContainer from "../components/shared/FormContainer";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/shared/Loader";
 import { useAlert } from "react-alert";
@@ -13,9 +13,11 @@ import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
 
 const UpdateProfile = ({ history }) => {
   const { error, user, loading } = useSelector((state) => state.user);
-  const { updateLoading, updateError, isUpdated } = useSelector(
-    (state) => state.userUpdateProfile
-  );
+  const {
+    loading: updateLoading,
+    error: updateError,
+    isUpdated,
+  } = useSelector((state) => state.userUpdateProfile);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,10 +27,31 @@ const UpdateProfile = ({ history }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
+  const [avatar, setAvatar] = useState("");
+  const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
+
+  const profileImageSubmitHandler = (e) => {
+    const reader = new FileReader();
+    console.log(e.target.files[0]);
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+        setAvatarPreview(reader.result);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const updateProfileSubmitHandler = (e) => {
+    e.preventDefault();
+    dispatch(updateProfile({ id: user._id, name, email, password, avatar }));
+  };
+
   useEffect(() => {
     if (user) {
       setName(user.name);
       setEmail(user.email);
+      setAvatarPreview(user.avatar.url);
     }
     if (error) {
       alert.error(error);
@@ -42,16 +65,11 @@ const UpdateProfile = ({ history }) => {
 
     if (isUpdated) {
       alert.success("Profile updated successfully");
-      history.push("/profile");
       dispatch(getUserDetails("profile"));
+      history.push("/profile");
       dispatch({ type: USER_UPDATE_PROFILE_RESET });
     }
   }, [dispatch, isUpdated, error, user, updateError, history, alert]);
-
-  const updateProfileSubmitHandler = (e) => {
-    e.preventDefault();
-    dispatch(updateProfile({ id: user._id, name, email, password }));
-  };
 
   return (
     <>
@@ -64,7 +82,7 @@ const UpdateProfile = ({ history }) => {
             className="update-profile"
           >
             <Form.Group controlId="name">
-              <i className="fa-solid fa-spell-check icon"></i>
+              <i className="fa-regular fa-face-smile icon"></i>
 
               <Form.Control
                 type="text"
@@ -104,6 +122,20 @@ const UpdateProfile = ({ history }) => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="avatar" className="profile-pic">
+              <Image
+                src={avatarPreview}
+                fluid
+                className="profile-img"
+                alt="avatar preview"
+              />
+              <Form.Control
+                type="file"
+                name="avatar"
+                accept="image/*"
+                onChange={profileImageSubmitHandler}
+              />
             </Form.Group>
 
             <Button

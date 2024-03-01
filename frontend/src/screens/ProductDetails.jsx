@@ -204,7 +204,9 @@ const ProductDetails = ({ match, history }) => {
                         </Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
-                        <h2 className="text-muted">Rate us</h2>
+                        <Modal.Title className="text-muted">
+                          Rate us
+                        </Modal.Title>
                         <div>
                           {[1, 2, 3, 4, 5].map((value) => (
                             <span
@@ -262,7 +264,7 @@ const ProductDetails = ({ match, history }) => {
                       <Card.Header>
                         <Card.Img
                           variant="top"
-                          src="/profile.png"
+                          src="/Profile.png"
                           alt="profile"
                           className="review-profile-img"
                         />
@@ -286,7 +288,7 @@ const ProductDetails = ({ match, history }) => {
                 ))}
               </Row>
             ) : (
-              <div className="bg-warning text-light">No Reviews Yet</div>
+              <div className="bg-warning text-center p-1">No Reviews Yet</div>
             )}
           </Col>
         </Row>

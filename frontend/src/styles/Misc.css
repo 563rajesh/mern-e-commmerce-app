@@ -26,10 +26,13 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.products-row {
+.products-col {
     min-height: 660px;
-
     /* min-height: calc(100% - 80px); */
+}
+
+.product-col {
+    min-height: 300px;
 }
 
 
@@ -55,7 +58,7 @@ address>div>p>span {
 }
 
 @media screen and (max-width:1115px) {
-    #products-row {
+    #products-col {
         margin-left: 62px;
     }
 }
@@ -77,7 +80,7 @@ address>div>p>span {
 
     }
 
-    #products-row {
+    #products-col {
         margin-left: 0;
     }
 

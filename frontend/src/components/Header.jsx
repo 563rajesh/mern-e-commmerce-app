@@ -100,7 +100,7 @@ const Header = () => {
                   )}
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>
-                      <i className="fa-solid fa-user text-primary"></i>
+                      <i className="fa-solid fa-user text-secondry"></i>
                       &nbsp; Profile
                     </NavDropdown.Item>
                   </LinkContainer>

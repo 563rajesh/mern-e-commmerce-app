@@ -38,18 +38,20 @@ const HomeScreen = ({ location }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [page, setPage] = useState(1);
   const [ratings, setRatings] = useState(0);
-  let pageSize = 10;
+  const [pageSize] = useState(8);
 
   let searchQuery;
   if (location.search) {
     searchQuery = location.search.split("=")[1];
   }
+
   const lastPageHandler = () => {
     if (!loading) {
       let lastP = Math.ceil(filteredProductsCount / pageSize);
       setPage(lastP);
     }
   };
+
   const handleReset = () => {
     setPrice(0);
     setSelectedCategory("");
@@ -202,25 +204,23 @@ const HomeScreen = ({ location }) => {
               </ListGroup.Item>
             </ListGroup>
           </Col>
-          <Col md={9} className="pb-5">
-            <Row
-              className={
-                filteredProductsCount === 1
-                  ? ""
-                  : "align-content-md-between products-row"
-              }
-              id="products-row"
-            >
+          <Col
+            md={9}
+            className={`pb-5
+              ${filteredProductsCount === 1 ? "" : "products-col"}`}
+            id="products-col"
+          >
+            <Row className="products-row align-content-md-between justify-content-center">
               {products &&
                 products.map((product) => {
                   return (
                     <Col
                       key={product._id}
-                      md={{ span: 4, offset: 0 }}
                       lg={3}
-                      sm={{ span: 4, offset: 1 }}
-                      xs={{ span: 8, offset: 2 }}
-                      className="products-col my-2 my-sm-2 my-md-0"
+                      md={{ span: 4, offset: 0 }}
+                      sm={{ span: 4, offset: 0 }}
+                      xs={{ span: 6, offset: 0 }}
+                      className="product-col mb-2"
                     >
                       <ProductScreen product={product} />
                     </Col>

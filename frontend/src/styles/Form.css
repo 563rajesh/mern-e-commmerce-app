@@ -51,6 +51,40 @@
 
 }
 
+.profile-pic {
+    display: flex;
+    padding: 0%;
+}
+
+.update-profile .form-group img,
+.register .form-group img {
+    width: 35px;
+    border-radius: 100%;
+
+}
+
+.update-profile .form-group .form-control-file::file-selector-button,
+.register .form-group .form-control-file::file-selector-button {
+    cursor: pointer;
+    width: 100%;
+    z-index: 2;
+    height: 5vh;
+    border: none;
+    margin: 0%;
+    font: 800 2vmax cursive;
+    transition: all 0.5s;
+    padding: 0 1vmax;
+    color: rgba(0, 0, 0, 0.623);
+    background-color: rgba(235, 235, 235, 0.473);
+
+}
+
+.update-profile .form-group .form-control-file::file-selector-button:hover,
+.register .form-group .form-control-file::file-selector-button:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+
 @media screen and (max-width:575px) {
     .search {
         position: relative;

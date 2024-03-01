@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { register } from "../actions/userAction";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Loader from "../components/shared/Loader";
@@ -14,7 +14,8 @@ const RegisterScreen = ({ location, history }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  const [avatar, setAvatar] = useState("");
+  const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
 
   const passwordElement = useRef(null);
   const confirmPasswordElement = useRef(null);
@@ -26,17 +27,30 @@ const RegisterScreen = ({ location, history }) => {
     (state) => state.user
   );
 
+  const redirect = location.search ? location.search.split("=")[1] : "/profile";
+
   const inputs = document.querySelectorAll(
     ".register .form-group .form-control"
   );
+
   inputs.forEach((input) => {
     input.classList.remove("form-error", "form-success");
   });
-
+  const imageSubmitHandler = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+        setAvatarPreview(reader.result);
+      }
+    };
+    reader.onerror = (err) => console.error(err);
+    reader.readAsDataURL(e.target.files[0]);
+  };
   const userRegisterSubmitHandler = (e) => {
     e.preventDefault();
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !avatar) {
       alert.error("Please provide all information");
 
       inputs.forEach((input) => {
@@ -56,19 +70,20 @@ const RegisterScreen = ({ location, history }) => {
       setConfirmPassword("");
       return;
     }
-    dispatch(register(name, email, password));
+    dispatch(register({ name, email, password, avatar }));
+
     inputs.forEach((input) => {
       input.classList.remove("form-error", "form-success");
     });
   };
+
   useEffect(() => {
+    if (isAuthenticated) {
+      history.push(redirect);
+    }
     if (error) {
       alert.error(error);
       dispatch(clearErrors());
-    }
-
-    if (isAuthenticated) {
-      history.push(redirect);
     }
   }, [history, isAuthenticated, redirect, dispatch, alert, error]);
 
@@ -80,7 +95,7 @@ const RegisterScreen = ({ location, history }) => {
         <FormContainer title="Register">
           <Form onSubmit={userRegisterSubmitHandler} className="register">
             <Form.Group controlId="name">
-              <i className="fa-solid fa-spell-check icon"></i>
+              <i className="fa-regular fa-face-smile icon"></i>
               <Form.Control
                 type="text"
                 placeholder="Name"
@@ -89,7 +104,7 @@ const RegisterScreen = ({ location, history }) => {
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="email">
-              <i className="fa-solid fa-envelope icon"></i>
+              <i className="fa-solid fa-user icon"></i>
 
               <Form.Control
                 type="email"
@@ -120,7 +135,21 @@ const RegisterScreen = ({ location, history }) => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Button type="submit" variant="primary">
+            <Form.Group controlId="avatar" className="profile-pic">
+              <Image
+                src={avatarPreview}
+                fluid
+                className="profile-img"
+                alt="avatar preview"
+              />
+              <Form.Control
+                type="file"
+                name="avatar"
+                accept="image/*"
+                onChange={imageSubmitHandler}
+              />
+            </Form.Group>
+            <Button type="submit" variant="primary" block>
               Submit
             </Button>
           </Form>

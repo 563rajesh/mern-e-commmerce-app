@@ -1,15 +1,29 @@
 const asyncHandler = require("express-async-handler"); //mdleware
 const User = require("../models/UserModel");
 const sendToken = require("../utils/jwtToken");
+const cloudinary = require("cloudinary");
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
+  const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    folder: "avatars",
+    width: 150,
+    crop: "scale",
+  });
   const isUserExist = await User.findOne({ email });
   if (isUserExist) {
     res.status(400);
     throw new Error("User Already Exists !");
   }
-  const user = await User.create({ name, email, password });
+  const user = await User.create({
+    name,
+    email,
+    password,
+    avatar: {
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    },
+  });
   if (user) {
     sendToken(user, 201, res);
   } else {
@@ -28,7 +42,7 @@ const authController = asyncHandler(async (req, res) => {
   }
   const user = await User.findOne({ email }).select("+password");
 
-  //checking user& password , generating token
+  //checking user & password , generating token
   if (user && (await user.matchPassword(password))) {
     sendToken(user, 200, res);
   } else {
@@ -62,21 +76,41 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 //user route
 const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
-    await user.save();
-    res.json({
-      success: true,
-    });
-  } else {
-    res.status(404);
-    throw new Error("User Not Found");
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+  };
+
+  if (req.body.password) {
+    newUserData.password = req.body.password;
   }
+
+  if (req.body.avatar !== "") {
+    const user = await User.findById(req.user._id);
+
+    const imageId = user.avatar.public_id;
+
+    await cloudinary.v2.uploader.destroy(imageId);
+
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "avatars",
+      width: 150,
+      crop: "scale",
+    });
+    newUserData.avatar = {
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    };
+  }
+
+  await User.findByIdAndUpdate(req.user._id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+  res.json({
+    success: true,
+  });
 });
 
 //admin route
