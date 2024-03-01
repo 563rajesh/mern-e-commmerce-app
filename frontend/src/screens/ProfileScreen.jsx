@@ -26,7 +26,7 @@ const ProfileScreen = () => {
         <Container>
           <Row>
             <Col md={4}>
-              <Image src="/profile.png" fluid />
+              <Image src="/Profile.png" fluid />
             </Col>
             <Col md={7}>
               <ListGroup variant="flush">
