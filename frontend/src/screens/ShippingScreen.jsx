@@ -20,7 +20,8 @@ const ShippingScreen = ({ history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (mobileNo.length > 10 || mobileNo.length < 10) {
+
+    if (mobileNo.length < 10) {
       alert.error("Number must be 10 digits");
       return;
     }

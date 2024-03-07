@@ -25,6 +25,9 @@ import UpdateUser from "./admin_screens/UpdateUser";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 import { AdminRoute } from "./components/shared/ProtectedRoute";
 import UpdateProfile from "./screens/UpdateProfile";
+import UpdatePassword from "./screens/UpdatePassword.jsx";
+import ForgotPassword from "./screens/ForgotPassword.jsx";
+import ResetPassword from "./screens/ResetPassword.jsx";
 import Success from "./screens/Success";
 import OrderDetailsScreen from "./screens/OrderDetailsScreen";
 import store from "./store";
@@ -36,6 +39,7 @@ function App() {
   useEffect(() => {
     store.dispatch(getUserDetails("profile"));
   }, []);
+
   //stop to inspect website
   // window.addEventListener("contextmenu", (e) => e.preventDefault());
   return (
@@ -58,12 +62,26 @@ function App() {
 
           <Route exact path="/contact" component={Contact} />
 
+          <Route exact path="/password/forgot" component={ForgotPassword} />
+
+          <Route
+            exact
+            path="/password/reset/:token"
+            component={ResetPassword}
+          />
+
           <ProtectedRoute exact path="/profile" component={ProfileScreen} />
 
           <ProtectedRoute
             exact
             path="/profile/update"
             component={UpdateProfile}
+          />
+
+          <ProtectedRoute
+            exact
+            path="/password/update"
+            component={UpdatePassword}
           />
 
           <ProtectedRoute exact path="/payment" component={PaymentScreen} />

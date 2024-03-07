@@ -24,15 +24,19 @@ const ProfileScreen = () => {
         <Loader />
       ) : (
         <Container>
-          <Row>
+          <Row className="justify-content-md-center">
             <Col md={4}>
-              <Image
-                src={user.avatar.url ? user.avatar.url : "/Profile.png"}
-                fluid
-                alt={user.name}
-              />
+              <Row className="align-items-center h-500">
+                <Col md={9}>
+                  <Image
+                    src={user.avatar.url ? user.avatar.url : "/Profile.png"}
+                    fluid
+                    alt={user.name}
+                  />
+                </Col>
+              </Row>
             </Col>
-            <Col md={7}>
+            <Col md={6}>
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   Full Name
@@ -51,16 +55,21 @@ const ProfileScreen = () => {
                   </div>
                 </ListGroup.Item>
                 <ListGroup.Item>
+                  <LinkContainer to="/myorders">
+                    <Button className="btn-block">My Orders</Button>
+                  </LinkContainer>
+                </ListGroup.Item>
+                <ListGroup.Item>
                   <LinkContainer to="/profile/update">
-                    <Button type="button" className="btn-block">
+                    <Button type="button" variant="info" block>
                       Edit Profile
                     </Button>
                   </LinkContainer>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <LinkContainer to="/myorders">
-                    <Button variant="info" className="btn-block">
-                      My Orders
+                  <LinkContainer to="/password/update">
+                    <Button type="button" block>
+                      Change Password
                     </Button>
                   </LinkContainer>
                 </ListGroup.Item>

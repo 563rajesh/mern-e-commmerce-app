@@ -89,7 +89,10 @@ const Header = () => {
                 </Nav.Link>
               </LinkContainer>
               {isAuthenticated ? (
-                <NavDropdown title={user && user.name} id="username">
+                <NavDropdown
+                  title={user && user.name.split(" ")[0]}
+                  id="username"
+                >
                   {user && user.role === "Admin" && (
                     <LinkContainer to="/admin/dashboard">
                       <NavDropdown.Item>

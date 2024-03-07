@@ -1,5 +1,4 @@
 const express = require("express");
-const router = express.Router();
 const {
   authController,
   getUserProfile,
@@ -10,21 +9,33 @@ const {
   updateUserRole,
   deleteUser,
   logout,
+  updateUserPassword,
+  forgotPassword,
+  resetPassword,
 } = require("../controllers/usersController");
 const { protect, isAdmin } = require("../middlewares/authMiddleware");
 
-//user registration
+const router = express.Router();
+
 router.route("/register").post(registerUser);
 
-//email and password auth
 router.route("/login").post(authController);
+
 router.route("/logout").get(logout);
-//get user profile private route
+
+router.route("/password/forgot").post(forgotPassword);
+
+router.route("/password/reset/:token").put(resetPassword);
+
 router.route("/profile").get(protect, getUserProfile);
+
 router.route("/profile/update").put(protect, updateUserProfile);
+
+router.route("/password/update").put(protect, updateUserPassword);
 
 //admin route
 router.route("/admin/users").get(protect, isAdmin, getAllUsers);
+
 router
   .route("/admin/user/:id")
   .get(protect, isAdmin, getSingleUser)

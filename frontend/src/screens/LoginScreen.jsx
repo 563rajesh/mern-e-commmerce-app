@@ -10,12 +10,19 @@ import { useAlert } from "react-alert";
 const LoginScreen = ({ location, history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const dispatch = useDispatch();
   const alert = useAlert();
+
   const { loading, error, isAuthenticated } = useSelector(
     (state) => state.user
   );
+
   const redirect = location.search ? location.search.split("=")[1] : "/profile";
 
   const submitHandler = (e) => {
@@ -50,20 +57,35 @@ const LoginScreen = ({ location, history }) => {
                 onChange={(e) => setEmail(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="password">
               <i className="fa-solid fa-lock icon"></i>
+              <i
+                class={`fa-regular ${
+                  showPassword ? "fa-eye" : "fa-eye-slash"
+                } eye`}
+                onClick={togglePasswordVisibility}
+              ></i>
               <Form.Control
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Button type="submit" variant="primary">
+
+            <Button type="submit" block variant="primary">
               SIGN IN
             </Button>
           </Form>
-          <Row>
+          <Row className="my-3">
+            <Col className="text-right">
+              <Link to="/password/forgot">
+                <button className="border-0 bg-light">Forgot Password ?</button>
+              </Link>
+            </Col>
+          </Row>
+          <Row className="my-2">
             <Col>
               New Customer ?{" "}
               <Link

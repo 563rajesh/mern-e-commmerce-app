@@ -14,6 +14,17 @@ const RegisterScreen = ({ location, history }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
 
@@ -36,6 +47,7 @@ const RegisterScreen = ({ location, history }) => {
   inputs.forEach((input) => {
     input.classList.remove("form-error", "form-success");
   });
+
   const imageSubmitHandler = (e) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -47,6 +59,7 @@ const RegisterScreen = ({ location, history }) => {
     reader.onerror = (err) => console.error(err);
     reader.readAsDataURL(e.target.files[0]);
   };
+
   const userRegisterSubmitHandler = (e) => {
     e.preventDefault();
 
@@ -63,6 +76,7 @@ const RegisterScreen = ({ location, history }) => {
       });
       return;
     }
+
     if (password !== confirmPassword) {
       alert.error("Password do not match");
       confirmPasswordElement.current.focus();
@@ -70,6 +84,7 @@ const RegisterScreen = ({ location, history }) => {
       setConfirmPassword("");
       return;
     }
+
     dispatch(register({ name, email, password, avatar }));
 
     inputs.forEach((input) => {
@@ -81,6 +96,7 @@ const RegisterScreen = ({ location, history }) => {
     if (isAuthenticated) {
       history.push(redirect);
     }
+
     if (error) {
       alert.error(error);
       dispatch(clearErrors());
@@ -96,6 +112,7 @@ const RegisterScreen = ({ location, history }) => {
           <Form onSubmit={userRegisterSubmitHandler} className="register">
             <Form.Group controlId="name">
               <i className="fa-regular fa-face-smile icon"></i>
+
               <Form.Control
                 type="text"
                 placeholder="Name"
@@ -114,10 +131,16 @@ const RegisterScreen = ({ location, history }) => {
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="password">
-              <i className="fa-solid fa-lock icon"></i>
+              <i className="fa-solid fa-unlock icon"></i>
+              <i
+                class={`fa-regular ${
+                  showPassword ? "fa-eye" : "fa-eye-slash"
+                } eye`}
+                onClick={togglePasswordVisibility}
+              ></i>
 
               <Form.Control
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 ref={passwordElement}
@@ -125,10 +148,16 @@ const RegisterScreen = ({ location, history }) => {
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="confirmPassword">
-              <i className="fa-solid fa-check icon"></i>
+              <i className="fa-solid fa-lock icon"></i>
+              <i
+                class={`fa-regular ${
+                  showConfirmPassword ? "fa-eye" : "fa-eye-slash"
+                } eye`}
+                onClick={toggleConfirmPasswordVisibility}
+              ></i>
 
               <Form.Control
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 placeholder="re-enter password"
                 value={confirmPassword}
                 ref={confirmPasswordElement}
@@ -153,7 +182,7 @@ const RegisterScreen = ({ location, history }) => {
               Submit
             </Button>
           </Form>
-          <Row>
+          <Row className="my-2">
             <Col>
               Have an account !{" "}
               <Link to={redirect ? `login?redirect=${redirect}` : "/login"}>

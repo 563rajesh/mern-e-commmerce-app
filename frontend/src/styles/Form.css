@@ -6,19 +6,21 @@
 .login .form-group .form-control,
 .register .form-group .form-control,
 .update-profile .form-group .form-control,
+.update-password .form-group .form-control,
+.reset-password .form-group .form-control,
+.forgot-password .form-group .form-control,
 .update-user .form-group .form-control,
 .contact-form .form-group .form-control {
-    padding: 4px;
-    padding-left: 36px;
-    margin: 10px 0 10px 0;
+    padding: 4px 10px 4px 36px;
+    margin: 1rem 0 2rem 0;
     height: 40px;
 }
 
 .search .form-control {
     margin: unset;
-    padding-right: 70px;
+    padding-right: 20px;
+    height: 37px;
 }
-
 
 .form-control:focus {
     box-shadow: none;
@@ -34,7 +36,8 @@
 }
 
 /* for all font and bootstrap icon */
-.icon {
+.icon,
+.eye {
     position: absolute;
     padding: 10px;
     min-width: 40px;
@@ -42,6 +45,11 @@
     /* transform: translateX(1vmax); */
     /* font-size: 1.6vmax; */
     color: rgba(0, 0, 0, 0.623);
+}
+
+.eye {
+    right: 10px;
+    cursor: pointer;
 }
 
 .form-outline-none:focus {
@@ -84,10 +92,10 @@
     background-color: rgb(235, 235, 235);
 }
 
-
 @media screen and (max-width:575px) {
     .search {
         position: relative;
+        padding-right: 58px;
     }
 
     .search .btn {

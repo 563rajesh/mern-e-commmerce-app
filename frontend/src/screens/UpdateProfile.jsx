@@ -13,6 +13,7 @@ import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
 
 const UpdateProfile = ({ history }) => {
   const { error, user, loading } = useSelector((state) => state.user);
+
   const {
     loading: updateLoading,
     error: updateError,
@@ -21,8 +22,6 @@ const UpdateProfile = ({ history }) => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   const dispatch = useDispatch();
   const alert = useAlert();
@@ -32,7 +31,7 @@ const UpdateProfile = ({ history }) => {
 
   const profileImageSubmitHandler = (e) => {
     const reader = new FileReader();
-    console.log(e.target.files[0]);
+
     reader.onload = () => {
       if (reader.readyState === 2) {
         setAvatar(reader.result);
@@ -44,7 +43,7 @@ const UpdateProfile = ({ history }) => {
 
   const updateProfileSubmitHandler = (e) => {
     e.preventDefault();
-    dispatch(updateProfile({ id: user._id, name, email, password, avatar }));
+    dispatch(updateProfile({ name, email, avatar }));
   };
 
   useEffect(() => {
@@ -53,6 +52,7 @@ const UpdateProfile = ({ history }) => {
       setEmail(user.email);
       setAvatarPreview(user.avatar.url);
     }
+
     if (error) {
       alert.error(error);
       dispatch(clearErrors());
@@ -92,6 +92,7 @@ const UpdateProfile = ({ history }) => {
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="email">
               <i className="fa-solid fa-envelope icon"></i>
 
@@ -103,26 +104,7 @@ const UpdateProfile = ({ history }) => {
                 onChange={(e) => setEmail(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Form.Group controlId="password">
-              <i className="fa-solid fa-lock icon"></i>
 
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="confirmPassword">
-              <i className="fa-solid fa-check icon"></i>
-
-              <Form.Control
-                type="password"
-                placeholder="Re-enter password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
             <Form.Group controlId="avatar" className="profile-pic">
               <Image
                 src={avatarPreview}
@@ -130,6 +112,7 @@ const UpdateProfile = ({ history }) => {
                 className="profile-img"
                 alt="avatar preview"
               />
+
               <Form.Control
                 type="file"
                 name="avatar"

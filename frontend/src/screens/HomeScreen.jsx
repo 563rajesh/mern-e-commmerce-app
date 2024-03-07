@@ -28,11 +28,11 @@ const categories = [
 
 const HomeScreen = ({ location }) => {
   const dispatch = useDispatch();
+  const alert = useAlert();
+
   const { loading, error, products, filteredProductsCount } = useSelector(
     (state) => state.productList
   );
-
-  const alert = useAlert();
 
   const [price, setPrice] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -57,7 +57,7 @@ const HomeScreen = ({ location }) => {
     setSelectedCategory("");
     setRatings(0);
     setPage(1);
-    dispatch(listProducts());
+    dispatch(listProducts(pageSize));
   };
 
   useEffect(() => {
@@ -65,6 +65,7 @@ const HomeScreen = ({ location }) => {
       alert.error(error);
       dispatch(clearErrors());
     }
+
     dispatch(
       listProducts(
         searchQuery,

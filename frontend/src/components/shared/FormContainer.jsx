@@ -4,9 +4,9 @@ import { Row, Col, Container } from "react-bootstrap";
 const formContainer = ({ children, title }) => {
   return (
     <Container>
-      <Row className="justify-content-md-center align-content-md-center h-500">
-        <Col md={3} className="mybox-shadow p-3">
-          <h2 className="text-muted text-center">{title}</h2>
+      <Row className="justify-content-md-center align-content-md-center  h-500">
+        <Col md={5} lg={3} className="mybox-shadow p-3 mx-3 my-3">
+          <h4 className="text-muted text-center">{title}</h4>
           {children}
         </Col>
       </Row>

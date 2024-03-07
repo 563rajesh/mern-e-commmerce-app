@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
+
 import {
   productListReducer,
   productDetailsReducer,
@@ -10,13 +11,15 @@ import {
   reviewReducer,
   newReviewReducer,
 } from "./reducers/productReducer";
+
 import {
   userReducer,
   userUpdateProfileReducer,
   allUserReducer,
   getSingleUserReducer,
+  forgotPasswordReducer,
 } from "./reducers/userReducers";
-import { cartReducer } from "./reducers/cartReducer";
+
 import {
   orderCreateReducer,
   orderDetailsReducer,
@@ -25,9 +28,12 @@ import {
   orderReducer,
 } from "./reducers/orderReducers";
 
+import { cartReducer } from "./reducers/cartReducer";
+
 const paymentMethodFromStorage = localStorage.getItem("paymentMethod")
   ? JSON.parse(localStorage.getItem("paymentMethod"))
   : "";
+
 const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
   ? JSON.parse(localStorage.getItem("shippingAddress"))
   : {};
@@ -58,7 +64,9 @@ const reducer = combineReducers({
   newReview: newReviewReducer,
   productReviews: productReviewsReducer,
   review: reviewReducer,
+  forgotPassword: forgotPasswordReducer,
 });
+
 const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
@@ -67,8 +75,11 @@ const initialState = {
   },
   // user: { userInfo: userInfoFromStorage },
 };
+
 // const initialState = {};
+
 const middleware = [thunk];
+
 const store = createStore(
   reducer,
   initialState,

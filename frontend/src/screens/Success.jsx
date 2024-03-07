@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const Success = () => {
@@ -17,7 +17,7 @@ const Success = () => {
           </div>
 
           <Link to="/myorders">
-            <span className="link-styles text-body">View Orders</span>
+            <Button className="border-0 bg-dark">View Orders</Button>
           </Link>
         </Col>
       </Row>
