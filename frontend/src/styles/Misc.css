@@ -57,6 +57,11 @@ address>div>p>span {
     margin-bottom: 20px;
 }
 
+.registerBtn {
+    font-weight: bold;
+    font-size: 20px;
+}
+
 @media screen and (max-width:1115px) {
     #products-col {
         margin-left: 62px;

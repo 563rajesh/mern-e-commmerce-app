@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Form, Col, Button, Row, Container } from "react-bootstrap";
-import CheckoutStep from "../components/shared/CheckoutStep";
+import CheckoutStep from "../../components/shared/CheckoutStep";
 import { useDispatch } from "react-redux";
-import { savePaymentMethod } from "../actions/cartAction";
+import { savePaymentMethod } from "../../actions/cartAction";
 
 const PaymentScreen = ({ history }) => {
   const [paymentMethod, setPaymentMethod] = useState("PayPal");

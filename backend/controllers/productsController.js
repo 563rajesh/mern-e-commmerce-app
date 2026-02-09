@@ -1,57 +1,67 @@
 const asyncHandler = require("express-async-handler"); //mdleware
 const Product = require("../models/ProductModel");
 
-//admin route for all products
+//Admin route to get all products
 const adminAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({});
 
   if (products) {
-    res.status(200).json({ products });
+    res.status(200).json({ success: true, products });
   } else {
     res.status(404);
     throw new Error("Products not found");
   }
 });
 
-//admin route
+//Admin route - create product
 const createProduct = asyncHandler(async (req, res) => {
   req.body.user = req.user._id;
+
   const product = await Product.create(req.body);
+
   if (product) {
-    res.status(201).json(product);
+    res.status(201).json({ success: true, product });
   } else {
     res.status(400);
     throw new Error("product not created");
   }
 });
-//admin route
+
+//Admin route - update product
 const updateProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
+
   if (!product) {
     res.status(404);
     throw new Error("Product not found");
   }
+
   await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
     useFindAndModify: false,
   });
   await product.save();
-  res.status(201).json(product);
+  res.status(200).json({ success: true, product });
 });
-//admin route
+
+//Admin route - delete product
 const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
+
   if (!product) {
     res.status(404);
     throw new Error("Product not found");
   }
+
   await Product.deleteOne({ _id: req.params.id });
+
   res
     .status(200)
     .json({ success: true, message: "Product deleted successfully" });
 });
-//user route
+
+//User route to get all products
 const getProducts = asyncHandler(async (req, res) => {
   const productsCount = await Product.countDocuments();
 
@@ -68,7 +78,6 @@ const getProducts = asyncHandler(async (req, res) => {
   const products = await Product.find(filter)
     .skip((page - 1) * pageSize)
     .limit(parseInt(pageSize));
-  // const products = await Product.find(filter);
 
   if (!products) {
     res.status(404);
@@ -81,10 +90,13 @@ const getProducts = asyncHandler(async (req, res) => {
     });
   }
 });
+
+//get single product for both user and admin
 const getProductDetails = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
+
   if (product) {
-    res.status(200).json(product);
+    res.status(200).json({ success: true, product });
   } else {
     res.status(404).json({ message: "Product not found" });
   }
@@ -93,17 +105,23 @@ const getProductDetails = asyncHandler(async (req, res) => {
 //Create New  Review and Update Product
 const createProductReview = asyncHandler(async (req, res) => {
   const { comment, rating, productId } = req.body;
+
   const newReview = {
     user: req.user._id,
     name: req.user.name,
     rating: Number(rating),
     comment,
   };
+
   const product = await Product.findById(productId);
+
   if (!product) {
+    res.status(404);
     throw new Error("Product not found");
   }
+
   const isReviewed = product.reviews.find((rev) => rev.user === req.user._id);
+
   if (isReviewed) {
     product.reviews.map((rev) => {
       if (rev.user === req.user._id) {
@@ -117,9 +135,11 @@ const createProductReview = asyncHandler(async (req, res) => {
     product.reviews.map((rev) => (avg += rev.rating));
     product.rating = (avg / product.reviews.length).toFixed(2);
   }
+
   await product.save();
-  res.status(200).json({ success: true });
+  res.status(201).json({ success: true });
 });
+
 // Get All Reviews of a product
 const getProductReviews = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.query.id);

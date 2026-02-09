@@ -2,81 +2,64 @@ const asyncHandler = require("express-async-handler");
 const Order = require("../models/OrderModel");
 const Product = require("../models/ProductModel");
 
+//Create order
 const createOrder = asyncHandler(async (req, res) => {
-  const {
-    orderItems,
-    shippingAddress,
-    shippingPrice,
-    paymentMethod,
-    itemPrice,
-    taxPrice,
-    totalPrice,
-    paymentResult,
-    paidAt,
-  } = req.body;
+  req.body.user = req.user._id;
+  req.body.isPaid = true;
 
-  if (orderItems && orderItems.length === 0) {
-    res.status(400);
-    throw new Error("No Order Found");
-  } else {
-    const order = new Order({
-      user: req.user._id,
-      orderItems,
-      shippingAddress,
-      shippingPrice,
-      paymentMethod,
-      itemPrice,
-      taxPrice,
-      totalPrice,
-      isPaid: true,
-      paidAt,
-      paymentResult,
-    });
-    const createOrder = await order.save();
-    res.status(201).json(createOrder);
-  }
+  const order = await Order.create(req.body);
+
+  res.status(201).json({ success: true, order });
 });
 
+//Get single order details
 const getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id).populate(
     "user",
     "name email"
   );
+
   if (order) {
-    res.json(order);
+    res.status(200).json({ success: true, order });
   } else {
     res.status(404);
     throw new Error("Order Not Found");
   }
 });
 
+//User get his orders
 const getMyOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({ user: req.user._id });
   if (orders) {
-    res.status(200).json(orders);
+    res.status(200).json({ success: true, orders });
   } else {
-    res.status(400);
+    res.status(404);
     throw new Error("Orders not found");
   }
 });
-//get all orders -admin
+
+//Get all orders - admin
 const getAllOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({});
   if (orders) {
-    res.status(201).json(orders);
+    res.status(200).json({ success: true, orders });
   }
 });
-//update orderStatus -admin
+
+//Update orderStatus - admin
 const updateOrderStatus = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
+
   if (!order) {
     res.status(404);
     throw new Error("Order not found");
   }
+
   if (order.orderStatus === "Delivered") {
     res.status(400);
     throw new Error(`Order delivered at ${order.deliveredAt}`);
   }
+
   //save to database
   order.orderStatus = req.body.status;
   order.isDelivered = req.body.isDelivered;
@@ -86,30 +69,39 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
       async (order) => await updateStock(order.product, order.qty)
     );
   }
+
   if (order.orderStatus === "Delivered") {
     order.deliveredAt = Date.now();
   }
+
   await order.save({ validateBeforeSave: false });
+
   res.status(200).json({ success: true });
 });
+
+//Update stock
 async function updateStock(id, qty) {
   const product = await Product.findById(id);
   product.countInStock -= qty;
   await product.save({ validateBeforeSave: false });
 }
 
-//delete order - admin
+//Delete order - admin
 const deleteOrder = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
+
   if (!order) {
     res.status(404);
     throw new Error("Order not found");
   }
+
   await Order.deleteOne({ _id: req.params.id });
+
   res
-    .status(201)
+    .status(200)
     .json({ success: true, message: "Order deleted successfully" });
 });
+
 module.exports = {
   createOrder,
   getOrderById,

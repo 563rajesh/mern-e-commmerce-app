@@ -5,18 +5,26 @@ const asyncHandler = require("express-async-handler");
 const protect = asyncHandler(async (req, res, next) => {
   const { token } = req.cookies;
 
-  if (token)
-    try {
-      const decodedData = jwt.verify(token, process.env.JWT_KEY);
-      req.user = await User.findById(decodedData.id);
-      next();
-    } catch (error) {
-      res.status(401);
-      throw new Error(error.message);
-    }
-  else {
-    res.status(404);
+  if (!token) {
+    res.status(401);
     throw new Error("Please login to access this");
+  }
+
+  try {
+    const decodedData = jwt.verify(token, process.env.JWT_KEY);
+
+    const user = await User.findById(decodedData.id).select("-password");
+
+    if (!user) {
+      res.status(401);
+      throw new Error("User not found");
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401);
+    throw new Error("Not authorized");
   }
 });
 

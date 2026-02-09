@@ -17,11 +17,14 @@ const importData = async () => {
     await User.deleteMany();
 
     const createUser = await User.insertMany(users);
+
     const adminUser = createUser[0]._id;
     const sampleData = products.map((product) => {
       return { ...product, user: adminUser };
     });
+
     await Product.insertMany(sampleData);
+
     console.log("data imported".green.inverse);
     process.exit();
   } catch (error) {

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Button, Row, Col, ListGroup, Image, Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/shared/Loader";
+import Loader from "../../components/shared/Loader";
 import { LinkContainer } from "react-router-bootstrap";
-import { clearErrors } from "../actions/userAction";
+import { clearErrors } from "../../actions/userAction";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();

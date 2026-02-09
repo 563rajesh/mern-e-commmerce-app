@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors, createOrder } from "../actions/orderActions";
+import { clearErrors, createOrder } from "../../actions/orderActions";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import { useAlert } from "react-alert";
-import Loader from "../components/shared/Loader";
+import Loader from "../../components/shared/Loader";
 import { Col, Container, Row } from "react-bootstrap";
 
 const OrderPayScreen = ({ history }) => {
@@ -16,7 +16,7 @@ const OrderPayScreen = ({ history }) => {
   const alert = useAlert();
 
   const { paymentMethod } = useSelector((state) => state.cart);
-  const { orderCreateError } = useSelector((state) => state.orderCreate);
+  const { error: orderCreateError } = useSelector((state) => state.orderCreate);
 
   const successPaymentHandler = (result, data) => {
     console.log(result, "result", data);
@@ -26,9 +26,12 @@ const OrderPayScreen = ({ history }) => {
       update_time: result.update_time,
       email_address: result.payer.email_address,
     };
+
     order.paidAt = result.create_time;
     order.paymentMethod = paymentMethod;
+
     dispatch(createOrder(order));
+
     history.push("/success");
     sessionStorage.removeItem("orderInfo");
   };

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import FormContainer from "../components/shared/FormContainer";
+import FormContainer from "../../components/shared/FormContainer";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors, forgotPassword } from "../actions/userAction";
+import { clearErrors, forgotPassword } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 import { Button, Form } from "react-bootstrap";
-import Loader from "../components/shared/Loader";
+import Loader from "../../components/shared/Loader";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");

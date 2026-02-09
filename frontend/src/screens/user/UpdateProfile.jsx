@@ -3,13 +3,13 @@ import {
   clearErrors,
   getUserDetails,
   updateProfile,
-} from "../actions/userAction";
-import FormContainer from "../components/shared/FormContainer";
+} from "../../actions/userAction";
+import FormContainer from "../../components/shared/FormContainer";
 import { Form, Button, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/shared/Loader";
+import Loader from "../../components/shared/Loader";
 import { useAlert } from "react-alert";
-import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
+import { USER_UPDATE_PROFILE_RESET } from "../../constants/userConstants";
 
 const UpdateProfile = ({ history }) => {
   const { error, user, loading } = useSelector((state) => state.user);
@@ -65,8 +65,11 @@ const UpdateProfile = ({ history }) => {
 
     if (isUpdated) {
       alert.success("Profile updated successfully");
+
       dispatch(getUserDetails("profile"));
+
       history.push("/profile");
+
       dispatch({ type: USER_UPDATE_PROFILE_RESET });
     }
   }, [dispatch, isUpdated, error, user, updateError, history, alert]);

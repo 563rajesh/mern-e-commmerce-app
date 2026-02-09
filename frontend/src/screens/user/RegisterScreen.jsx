@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { register } from "../actions/userAction";
+import { register } from "../../actions/userAction";
 import { Form, Button, Row, Col, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import Loader from "../components/shared/Loader";
-import FormContainer from "../components/shared/FormContainer";
-import { clearErrors } from "../actions/orderActions";
+import Loader from "../../components/shared/Loader";
+import FormContainer from "../../components/shared/FormContainer";
+import { clearErrors } from "../../actions/orderActions";
 import { useAlert } from "react-alert";
 
 const RegisterScreen = ({ location, history }) => {
@@ -112,7 +112,6 @@ const RegisterScreen = ({ location, history }) => {
           <Form onSubmit={userRegisterSubmitHandler} className="register">
             <Form.Group controlId="name">
               <i className="fa-regular fa-face-smile icon"></i>
-
               <Form.Control
                 type="text"
                 placeholder="Name"
@@ -120,9 +119,9 @@ const RegisterScreen = ({ location, history }) => {
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="email">
               <i className="fa-solid fa-user icon"></i>
-
               <Form.Control
                 type="email"
                 placeholder="Email"
@@ -130,6 +129,7 @@ const RegisterScreen = ({ location, history }) => {
                 onChange={(e) => setImail(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="password">
               <i className="fa-solid fa-unlock icon"></i>
               <i
@@ -138,7 +138,6 @@ const RegisterScreen = ({ location, history }) => {
                 } eye`}
                 onClick={togglePasswordVisibility}
               ></i>
-
               <Form.Control
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
@@ -147,6 +146,7 @@ const RegisterScreen = ({ location, history }) => {
                 onChange={(e) => setPassword(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="confirmPassword">
               <i className="fa-solid fa-lock icon"></i>
               <i
@@ -155,15 +155,15 @@ const RegisterScreen = ({ location, history }) => {
                 } eye`}
                 onClick={toggleConfirmPasswordVisibility}
               ></i>
-
               <Form.Control
                 type={showConfirmPassword ? "text" : "password"}
-                placeholder="re-enter password"
+                placeholder="Re-enter password"
                 value={confirmPassword}
                 ref={confirmPasswordElement}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="avatar" className="profile-pic">
               <Image
                 src={avatarPreview}
@@ -178,6 +178,7 @@ const RegisterScreen = ({ location, history }) => {
                 onChange={imageSubmitHandler}
               />
             </Form.Group>
+
             <Button type="submit" variant="primary" block>
               Submit
             </Button>

@@ -21,7 +21,7 @@ const registerUser = asyncHandler(async (req, res) => {
     crop: "scale",
   });
 
-  const user = await User.create({
+  const user = new User({
     name,
     email,
     password,
@@ -35,6 +35,8 @@ const registerUser = asyncHandler(async (req, res) => {
     await cloudinary.v2.uploader.destroy(myCloud.public_id);
   }
 
+  await user.save();
+
   sendToken(user, 201, res);
 });
 
@@ -45,18 +47,19 @@ const authController = asyncHandler(async (req, res) => {
   //checking user has provided both password and email
   if (!email || !password) {
     res.status(400);
-    throw new Error("Please enter email & password");
+    throw new Error("Email and Password are required");
   }
 
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email: email.toLowerCase() }).select(
+    "+password"
+  );
 
   //checking user & password , generating token
-  if (user && (await user.matchPassword(password))) {
-    sendToken(user, 200, res);
-  } else {
+  if (!user || !(await user.matchPassword(password))) {
     res.status(401);
-    throw new Error("Invalid Email or Password");
+    throw new Error("Invalid credentials");
   }
+  sendToken(user, 200, res);
 });
 
 //Logout user
@@ -74,16 +77,16 @@ const logout = asyncHandler(async (req, res) => {
 
 //User get profile
 const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (user) {
-    res.json({
-      success: true,
-      user,
-    });
-  } else {
+  const user = req.user;
+
+  if (!user) {
     res.status(404);
     throw new Error("User Not Found");
   }
+  res.status(200).json({
+    success: true,
+    user,
+  });
 });
 
 //Forgot password
@@ -218,6 +221,23 @@ const updateUserPassword = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true });
 });
 
+//Update user role - admin route
+const updateUserRole = asyncHandler(async (req, res) => {
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+  };
+
+  await User.findByIdAndUpdate(req.params.id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
+  res.status(201).json({ success: true });
+});
+
 //Delete user - admin route
 const deleteUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
@@ -236,23 +256,6 @@ const deleteUser = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User not found");
   }
-});
-
-//Update user role - admin route
-const updateUserRole = asyncHandler(async (req, res) => {
-  const newUserData = {
-    name: req.body.name,
-    email: req.body.email,
-    role: req.body.role,
-  };
-
-  await User.findByIdAndUpdate(req.params.id, newUserData, {
-    new: true,
-    runValidators: true,
-    useFindAndModify: false,
-  });
-
-  res.status(201).json({ success: true });
 });
 
 //Get single user - admin route

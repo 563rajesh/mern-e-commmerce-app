@@ -13,16 +13,10 @@ import { useAlert } from "react-alert";
 const Header = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
-
-  const [search, setSearch] = useState("");
-
-  const { user, isAuthenticated } = useSelector((state) => state.user);
-
   const history = useHistory();
 
-  const cartClickHandler = () => {
-    history.push("/cart");
-  };
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+  const [search, setSearch] = useState("");
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -32,9 +26,10 @@ const Header = () => {
   const searchSubmitHandler = (e) => {
     e.preventDefault();
     if (search.trim()) {
-      history.push(`/?search=${search}`);
+      history.push(`products/?search=${search}`);
     } else {
       history.push("/");
+      setSearch("");
     }
   };
 
@@ -64,9 +59,11 @@ const Header = () => {
                 type="text"
                 placeholder="Search..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
               />
-              <Button type="submit" className="text-dark">
+              <Button type="submit" className="text-white">
                 Search
               </Button>
             </Form>
@@ -82,47 +79,55 @@ const Header = () => {
                   <Nav.Link>Contact</Nav.Link>
                 </LinkContainer>
               </Nav>
-              <LinkContainer to="/cart">
-                <Nav.Link onClick={cartClickHandler}>
-                  <i className="fa-solid fa-cart-shopping"></i>
-                  &nbsp;Cart
-                </Nav.Link>
-              </LinkContainer>
-              {isAuthenticated ? (
-                <NavDropdown
-                  title={user && user.name.split(" ")[0]}
-                  id="username"
-                >
-                  {user && user.role === "Admin" && (
-                    <LinkContainer to="/admin/dashboard">
-                      <NavDropdown.Item>
-                        <i className="fa-solid fa-gauge"></i>&nbsp; Admin
-                        Dashboard
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                  )}
-                  <LinkContainer to="/profile">
-                    <NavDropdown.Item>
-                      <i className="fa-solid fa-user text-secondry"></i>
-                      &nbsp; Profile
-                    </NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/myorders">
-                    <NavDropdown.Item>
-                      <i className="fa-solid fa-list"></i>&nbsp; Orders
-                    </NavDropdown.Item>
-                  </LinkContainer>
-                  <NavDropdown.Item onClick={logoutHandler}>
-                    <i className="fa-solid fa-right-from-bracket text-danger"></i>
-                    &nbsp; Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
-              ) : (
-                <LinkContainer to="/login">
+              <Nav>
+                <LinkContainer to="/cart">
                   <Nav.Link>
-                    <i className="fa-solid fa-user"></i>&nbsp; Signin
+                    <i className="fa-solid fa-cart-shopping"></i>
+                    &nbsp;Cart
                   </Nav.Link>
                 </LinkContainer>
+              </Nav>
+              {isAuthenticated ? (
+                <NavDropdown
+                  title={user && user.name.toUpperCase()}
+                  id="username"
+                  alignRight
+                >
+                  <div className="p-2">
+                    {user && user.role === "Admin" && (
+                      <LinkContainer to="/admin/dashboard">
+                        <NavDropdown.Item>
+                          <i className="fa-solid fa-gauge"></i>&nbsp; Admin
+                          Dashboard
+                        </NavDropdown.Item>
+                      </LinkContainer>
+                    )}
+
+                    <LinkContainer to="/profile">
+                      <NavDropdown.Item>
+                        <i className="fa-solid fa-user text-secondry"></i>
+                        &nbsp; Profile
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/myorders">
+                      <NavDropdown.Item>
+                        <i className="fa-solid fa-list"></i>&nbsp; Orders
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      <i className="fa-solid fa-right-from-bracket text-danger"></i>
+                      &nbsp; Logout
+                    </NavDropdown.Item>
+                  </div>
+                </NavDropdown>
+              ) : (
+                <Nav>
+                  <LinkContainer to="/login">
+                    <Nav.Link>
+                      <i className="fa-solid fa-user"></i>&nbsp; Signin
+                    </Nav.Link>
+                  </LinkContainer>
+                </Nav>
               )}
             </Nav>
           </Navbar.Collapse>

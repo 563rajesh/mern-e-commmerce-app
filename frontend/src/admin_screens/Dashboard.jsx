@@ -37,7 +37,7 @@ const Dashboard = () => {
       <div className="mb-4">
         <h2 className="text-muted">Dashboard</h2>
         <div className="dashboard-1 pt-2 text-center pb-2 text-white">
-          Total Amount ${totalAmount}
+          Total Amount $ {totalAmount}
         </div>
 
         <div className="dashboard-2  text-white m-3">

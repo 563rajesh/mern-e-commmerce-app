@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { clearErrors, login } from "../actions/userAction";
+import { clearErrors, login } from "../../actions/userAction";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/shared/Loader";
+import Loader from "../../components/shared/Loader";
 import { Link } from "react-router-dom";
-import FormContainer from "../components/shared/FormContainer";
+import FormContainer from "../../components/shared/FormContainer";
 import { useAlert } from "react-alert";
 
 const LoginScreen = ({ location, history }) => {
@@ -68,7 +68,7 @@ const LoginScreen = ({ location, history }) => {
               ></i>
               <Form.Control
                 type={showPassword ? "text" : "password"}
-                placeholder="enter password"
+                placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               ></Form.Control>
@@ -90,6 +90,7 @@ const LoginScreen = ({ location, history }) => {
               New Customer ?{" "}
               <Link
                 to={redirect ? `register?redirect=${redirect}` : "/register"}
+                className="registerBtn"
               >
                 Register
               </Link>

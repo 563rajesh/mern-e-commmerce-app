@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { clearErrors, updatePassword } from "../actions/userAction";
-import FormContainer from "../components/shared/FormContainer";
+import { clearErrors, updatePassword } from "../../actions/userAction";
+import FormContainer from "../../components/shared/FormContainer";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/shared/Loader";
+import Loader from "../../components/shared/Loader";
 import { useAlert } from "react-alert";
-import { UPDATE_PASSWORD_RESET } from "../constants/userConstants";
+import { UPDATE_PASSWORD_RESET } from "../../constants/userConstants";
 
 const UpdatePassword = ({ history }) => {
   const [password, setPassword] = useState({

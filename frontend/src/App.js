@@ -4,15 +4,15 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import HomeScreen from "./screens/HomeScreen";
 import ProductDetails from "./screens/ProductDetails";
-import CartScreen from "./screens/CartScreen";
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import ShippingScreen from "./screens/ShippingScreen";
-import PaymentScreen from "./screens/PaymentScreen";
-import PlaceOrderScreen from "./screens/PlaceOrderScreen";
-import OrderPayScreen from "./screens/OrderPayScreen";
-import ShowOrders from "./screens/ShowOrders";
+import CartScreen from "./screens/cart/CartScreen";
+import LoginScreen from "./screens/user/LoginScreen";
+import RegisterScreen from "./screens/user/RegisterScreen";
+import ProfileScreen from "./screens/user/ProfileScreen";
+import ShippingScreen from "./screens/cart/ShippingScreen";
+import PaymentScreen from "./screens/cart/PaymentScreen";
+import PlaceOrderScreen from "./screens/cart/PlaceOrderScreen";
+import OrderPayScreen from "./screens/cart/OrderPayScreen";
+import ShowOrders from "./screens/cart/ShowOrders";
 import Dashboard from "./admin_screens/Dashboard";
 import ProductList from "./admin_screens/ProductList";
 import NewProduct from "./admin_screens/NewProduct";
@@ -24,12 +24,12 @@ import ProcessOrder from "./admin_screens/ProcessOrder";
 import UpdateUser from "./admin_screens/UpdateUser";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 import { AdminRoute } from "./components/shared/ProtectedRoute";
-import UpdateProfile from "./screens/UpdateProfile";
-import UpdatePassword from "./screens/UpdatePassword.jsx";
-import ForgotPassword from "./screens/ForgotPassword.jsx";
-import ResetPassword from "./screens/ResetPassword.jsx";
-import Success from "./screens/Success";
-import OrderDetailsScreen from "./screens/OrderDetailsScreen";
+import UpdateProfile from "./screens/user/UpdateProfile";
+import UpdatePassword from "./screens/user/UpdatePassword.jsx";
+import ForgotPassword from "./screens/user/ForgotPassword.jsx";
+import ResetPassword from "./screens/user/ResetPassword.jsx";
+import Success from "./screens/cart/Success";
+import OrderDetailsScreen from "./screens/cart/OrderDetailsScreen";
 import store from "./store";
 import { getUserDetails } from "./actions/userAction";
 import About from "./components/About";
@@ -49,6 +49,8 @@ function App() {
       <main className="my-3">
         <Switch>
           <Route exact path="/" component={HomeScreen} />
+
+          <Route exact path="/products" component={HomeScreen} />
 
           <Route exact path="/product/:id" component={ProductDetails} />
 

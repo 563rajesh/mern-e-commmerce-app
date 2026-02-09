@@ -70,12 +70,13 @@ const About = () => {
             </Card.Text>
             <Card.Title className="text-warning">Achievment</Card.Title>
             <Card.Body className="text-justify">
-              " Our commitment to exceptional customer service has resulted in
+              "Our commitment to exceptional customer service has resulted in
               consistently high customer <b>satisfaction</b> ratings and
               positive reviews."
-              <br />" Our e-commerce platform has expanded its reach to serve
-              customers worldwide, establishing partnerships with international
-              suppliers and optimizing logistics for efficient global shipping."
+              <br />
+              "Our e-commerce platform has expanded its reach to serve customers
+              worldwide, establishing partnerships with international suppliers
+              and optimizing logistics for efficient global shipping."
             </Card.Body>
           </Card>
         </Col>

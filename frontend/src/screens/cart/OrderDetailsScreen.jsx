@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, ListGroup, Image, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { clearErrors, getOrderDetails } from "../actions/orderActions";
-import Message from "../components/shared/Message";
-import Loader from "../components/shared/Loader";
+import { clearErrors, getOrderDetails } from "../../actions/orderActions";
+import Message from "../../components/shared/Message";
+import Loader from "../../components/shared/Loader";
 import { useAlert } from "react-alert";
 
 const OrderDetailsScreen = ({ match }) => {

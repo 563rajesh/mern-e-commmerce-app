@@ -1,8 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, RemoveFromCart } from "../actions/cartAction";
+import { addToCart, RemoveFromCart } from "../../actions/cartAction";
 import { Link } from "react-router-dom";
-import Message from "../components/shared/Message";
+import Message from "../../components/shared/Message";
 
 import {
   Row,

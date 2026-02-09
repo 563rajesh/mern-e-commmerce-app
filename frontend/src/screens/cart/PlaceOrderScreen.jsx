@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import CheckoutStep from "../components/shared/CheckoutStep";
+import CheckoutStep from "../../components/shared/CheckoutStep";
 import { Row, Col, ListGroup, Image, Button, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -134,7 +134,6 @@ const PlaceOrderScreen = ({ history }) => {
                 className="btn-block"
                 type="button"
                 onClick={placeOrderHandler}
-                disabled={cartItems.length === 0}
               >
                 Place order
               </Button>

@@ -27,8 +27,9 @@ export const orderCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case ORDER_CREATE_REQUEST:
       return { ...state, loading: true };
+
     case ORDER_CREATE_SUCCESS:
-      return { loading: false, success: true, order: action.payload };
+      return { loading: false, success: true, order: action.payload.order };
     case ORDER_CREATE_RESET:
       return { ...state, success: false };
     case ORDER_CREATE_FAIL:
@@ -48,10 +49,13 @@ export const orderDetailsReducer = (state = { order: {} }, action) => {
   switch (action.type) {
     case ORDER_DETAILS_REQUEST:
       return { loading: true };
+
     case ORDER_DETAILS_SUCCESS:
-      return { loading: false, order: action.payload };
+      return { loading: false, order: action.payload.order };
+
     case ORDER_DETAILS_FAIL:
       return { loading: false, error: action.payload };
+
     case CLEAR_ERRORS:
       return {
         ...state,
@@ -68,8 +72,10 @@ export const myOrders = (state = { orders: [] }, action) => {
   switch (action.type) {
     case LIST_MY_ORDERS_REQUEST:
       return { loading: true };
+
     case LIST_MY_ORDERS_SUCCESS:
-      return { loading: false, orders: action.payload };
+      return { loading: false, orders: action.payload.orders };
+
     case LIST_MY_ORDERS_FAIL:
       return {
         loading: false,
@@ -91,7 +97,7 @@ export const allOrdersReducer = (state = { orders: [] }, action) => {
     case ALL_ORDERS_SUCCESS:
       return {
         loading: false,
-        orders: action.payload,
+        orders: action.payload.orders,
       };
 
     case ALL_ORDERS_FAIL:
@@ -99,6 +105,7 @@ export const allOrdersReducer = (state = { orders: [] }, action) => {
         loading: false,
         error: action.payload,
       };
+
     case CLEAR_ERRORS:
       return {
         ...state,
@@ -141,6 +148,7 @@ export const orderReducer = (state = {}, action) => {
         loading: false,
         error: action.payload,
       };
+
     case UPDATE_ORDER_RESET:
       return {
         ...state,
@@ -152,6 +160,7 @@ export const orderReducer = (state = {}, action) => {
         ...state,
         isDeleted: false,
       };
+
     case CLEAR_ERRORS:
       return {
         ...state,

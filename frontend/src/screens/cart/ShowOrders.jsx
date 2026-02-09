@@ -2,20 +2,28 @@ import React, { useEffect } from "react";
 import { Button, Row, Col, Table, Container } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/shared/Loader";
-import { clearErrors, orderList } from "../actions/orderActions";
+import Loader from "../../components/shared/Loader";
+import { clearErrors, orderList } from "../../actions/orderActions";
+import { useAlert } from "react-alert";
 
 const ShowOrders = () => {
   const dispatch = useDispatch();
+  const alert = useAlert();
+
   const { loading, error, orders } = useSelector((state) => state.listMyOrders);
+
+  if (!orders) {
+    alert.error("You have not created order yet");
+  }
 
   useEffect(() => {
     if (error) {
       alert.error(error);
       dispatch(clearErrors());
     }
+
     dispatch(orderList());
-  }, [dispatch, error]);
+  }, [dispatch, error, alert]);
   return (
     <Container>
       <Row className="justify-content-md-center">

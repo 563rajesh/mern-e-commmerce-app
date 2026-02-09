@@ -26,7 +26,7 @@ const categories = [
   "SmartPhones",
 ];
 
-const HomeScreen = ({ location }) => {
+const HomeScreen = ({ history, location }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -53,11 +53,25 @@ const HomeScreen = ({ location }) => {
   };
 
   const handleReset = () => {
+    if (searchQuery !== "") {
+      history.push("/");
+    }
+
     setPrice(0);
     setSelectedCategory("");
     setRatings(0);
     setPage(1);
-    dispatch(listProducts(pageSize));
+    searchQuery = "";
+    dispatch(
+      listProducts(
+        searchQuery,
+        price,
+        selectedCategory,
+        page,
+        ratings,
+        pageSize
+      )
+    );
   };
 
   useEffect(() => {
@@ -165,7 +179,9 @@ const HomeScreen = ({ location }) => {
               <ListGroup.Item>
                 <Button as="div" className="btn-block ">
                   {page} of{" "}
-                  {!loading && Math.ceil(filteredProductsCount / pageSize)} page
+                  {(!loading && Math.ceil(filteredProductsCount / pageSize)) ||
+                    1}{" "}
+                  page
                 </Button>
                 <ButtonGroup size="sm">
                   <Button

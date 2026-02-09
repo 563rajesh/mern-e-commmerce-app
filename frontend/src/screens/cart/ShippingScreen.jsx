@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import FormContainer from "../components/shared/FormContainer";
+import FormContainer from "../../components/shared/FormContainer";
 import { Form, Button, Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { saveShippingAddress } from "../actions/cartAction";
-import CheckoutStep from "../components/shared/CheckoutStep";
+import { saveShippingAddress } from "../../actions/cartAction";
+import CheckoutStep from "../../components/shared/CheckoutStep";
 import { useAlert } from "react-alert";
 
 const ShippingScreen = ({ history }) => {
@@ -87,7 +87,12 @@ const ShippingScreen = ({ history }) => {
               required
             ></Form.Control>
           </Form.Group>
-          <Button variant="primary" type="submit" className="btn-block">
+          <Button
+            variant="primary"
+            type="submit"
+            className="btn-block"
+            disabled={shippingAddress === ""}
+          >
             Continue
           </Button>
         </Form>
