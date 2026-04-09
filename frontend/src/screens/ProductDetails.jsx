@@ -38,7 +38,6 @@ const ProductDetails = ({ match, history }) => {
   const { loading, product, error } = useSelector(
     (state) => state.productDetails,
   );
-  console.log(product, "product");
 
   const { isAuthenticated } = useSelector((state) => state.user);
 
@@ -97,6 +96,7 @@ const ProductDetails = ({ match, history }) => {
 
     dispatch(listProductDetails(productId));
   }, [dispatch, productId, successReview, reviewError, alert, error]);
+  console.log(product, "productDetails");
 
   return (
     <Container>

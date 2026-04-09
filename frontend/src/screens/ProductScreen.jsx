@@ -4,6 +4,7 @@ import Rating from "../components/Rating";
 import { Link } from "react-router-dom";
 
 const ProductScreen = ({ product }) => {
+  console.log("product");
   return (
     <Card className="mybox-shadow p-1 card-layout">
       <Card.Header>
