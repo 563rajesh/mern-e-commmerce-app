@@ -36,15 +36,16 @@ const ProductDetails = ({ match, history }) => {
   const commentFocus = useRef(null);
 
   const { loading, product, error } = useSelector(
-    (state) => state.productDetails
+    (state) => state.productDetails,
   );
+  console.log(product, "product");
 
   const { isAuthenticated } = useSelector((state) => state.user);
 
   const productId = match.params.id;
 
   const { success: successReview, error: reviewError } = useSelector(
-    (state) => state.newReview
+    (state) => state.newReview,
   );
 
   const addToCartHandler = () => {
