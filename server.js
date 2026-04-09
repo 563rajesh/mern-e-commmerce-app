@@ -62,7 +62,7 @@ app.use(errorHandler);
 app.listen(process.env.PORT, () => {
   console.log(
     `server running in ${process.env.NODE_ENV} mode on ${process.env.PORT} port`
-      .inverse
+      .inverse,
   );
 });
 
