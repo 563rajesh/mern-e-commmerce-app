@@ -39,6 +39,7 @@ function App() {
   useEffect(() => {
     store.dispatch(getUserDetails("profile"));
   }, []);
+  console.log("hello");
 
   //stop to inspect website
   // window.addEventListener("contextmenu", (e) => e.preventDefault());

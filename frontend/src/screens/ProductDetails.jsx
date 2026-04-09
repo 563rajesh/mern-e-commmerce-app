@@ -35,9 +35,15 @@ const ProductDetails = ({ match, history }) => {
   const [comment, setComment] = useState("");
   const commentFocus = useRef(null);
 
-  const { loading, product, error } = useSelector(
-    (state) => state.productDetails,
-  );
+  // const { loading, product, error } = useSelector(
+  //   (state) => state.productDetails,
+  // );
+
+  const productDetails = useSelector((state) => state.productDetails);
+  console.log(productDetails, "productdetails");
+  const product = productDetails?.product || productDetails;
+  const loading = productDetails?.loading;
+  const error = productDetails?.error;
 
   const { isAuthenticated } = useSelector((state) => state.user);
 
