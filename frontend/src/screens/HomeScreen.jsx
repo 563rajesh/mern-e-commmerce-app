@@ -31,7 +31,7 @@ const HomeScreen = ({ history, location }) => {
   const alert = useAlert();
 
   const { loading, error, products, filteredProductsCount } = useSelector(
-    (state) => state.productList
+    (state) => state.productList,
   );
 
   const [price, setPrice] = useState(0);
@@ -69,8 +69,8 @@ const HomeScreen = ({ history, location }) => {
         selectedCategory,
         page,
         ratings,
-        pageSize
-      )
+        pageSize,
+      ),
     );
   };
 
@@ -87,8 +87,8 @@ const HomeScreen = ({ history, location }) => {
         selectedCategory,
         page,
         ratings,
-        pageSize
-      )
+        pageSize,
+      ),
     );
   }, [
     dispatch,

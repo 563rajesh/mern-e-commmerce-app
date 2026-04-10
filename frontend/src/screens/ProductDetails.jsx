@@ -35,16 +35,21 @@ const ProductDetails = ({ match, history }) => {
   const [comment, setComment] = useState("");
   const commentFocus = useRef(null);
 
-  const { loading, product, error } = useSelector(
-    (state) => state.productDetails
-  );
+  // const { loading, product, error } = useSelector(
+  //   (state) => state.productDetails,
+  // );
+
+  const productDetails = useSelector((state) => state.productDetails);
+  const product = productDetails?.product || productDetails;
+  const loading = productDetails?.loading;
+  const error = productDetails?.error;
 
   const { isAuthenticated } = useSelector((state) => state.user);
 
   const productId = match.params.id;
 
   const { success: successReview, error: reviewError } = useSelector(
-    (state) => state.newReview
+    (state) => state.newReview,
   );
 
   const addToCartHandler = () => {
@@ -108,7 +113,7 @@ const ProductDetails = ({ match, history }) => {
           </Link>
         </Col>
       </Row>
-      {loading ? (
+      {loading || !product ? (
         <Loader />
       ) : (
         <Row className="p-3 my-3">
