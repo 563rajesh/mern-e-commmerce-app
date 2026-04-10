@@ -4,11 +4,11 @@ import { Container, Col, Row } from "react-bootstrap";
 const Footer = () => {
   return (
     <>
-      <footer>
+      <footer className="footer fixed-bottom">
         <Container fluid>
-          <Row className="footer">
-            <Col className="text-center text-white bg-primary">
-              <p>&copy; 2026 Wys. All rights reserved.</p>
+          <Row className="align-items-center text-center">
+            <Col className="text-white bg-primary">
+              <p className="mb-0">&copy; 2026 Wys. All rights reserved.</p>
             </Col>
           </Row>
         </Container>

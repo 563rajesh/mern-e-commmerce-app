@@ -40,7 +40,6 @@ const ProductDetails = ({ match, history }) => {
   // );
 
   const productDetails = useSelector((state) => state.productDetails);
-  console.log(productDetails, "productdetails");
   const product = productDetails?.product || productDetails;
   const loading = productDetails?.loading;
   const error = productDetails?.error;
@@ -102,7 +101,6 @@ const ProductDetails = ({ match, history }) => {
 
     dispatch(listProductDetails(productId));
   }, [dispatch, productId, successReview, reviewError, alert, error]);
-  console.log(product, "productDetails");
 
   return (
     <Container>
@@ -115,7 +113,7 @@ const ProductDetails = ({ match, history }) => {
           </Link>
         </Col>
       </Row>
-      {loading ? (
+      {loading || !product ? (
         <Loader />
       ) : (
         <Row className="p-3 my-3">
