@@ -7,6 +7,7 @@ const connectDb = require("./backend/config/database");
 const productsRoute = require("./backend/routes/productsRoute");
 const usersRoute = require("./backend/routes/usersRoute");
 const ordersRoute = require("./backend/routes/ordersRoute");
+const aiRoute = require("./backend/routes/aiRoutes");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary");
 const bodyParser = require("body-parser");
@@ -44,6 +45,7 @@ app.use(fileUpload());
 app.use("/api", productsRoute);
 app.use("/api", usersRoute);
 app.use("/api", ordersRoute);
+app.use("/api/ai", aiRoute);
 
 //payment gateway api route
 app.get("/api/config/paypal", (req, res) => {
