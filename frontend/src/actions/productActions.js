@@ -33,24 +33,17 @@ import {
 export const listProducts =
   //provide default as if arg not passed eg-for admin
 
-    (
-      searchQuery = "",
-      price = 0,
-      selectedCategory = "",
-      page = 1,
-      rating = 0,
-      pageSize = 0
-    ) =>
+  (queryString = "") =>
     async (dispatch) => {
       try {
         dispatch({ type: PRODUCT_LIST_REQUEST });
 
-        let link = `/api/products?query=${searchQuery}&price=${price}&rating=${rating}&page=${page}&pageSize=${pageSize}`;
-        if (selectedCategory) {
-          link = `/api/products?query=${searchQuery}&price=${price}&rating=${rating}&category=${selectedCategory}&page=${page}&pageSize=${pageSize}`;
-        }
+        // let link = `/api/products?query=${searchQuery}&price=${price}&rating=${rating}&page=${page}&pageSize=${pageSize}`;
+        // if (selectedCategory) {
+        //   link = `/api/products?query=${searchQuery}&price=${price}&rating=${rating}&category=${selectedCategory}&page=${page}&pageSize=${pageSize}`;
+        // }
 
-        const { data } = await axios.get(link);
+        const { data } = await axios.get(`/api/products${queryString}`);
 
         dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
       } catch (error) {
@@ -118,7 +111,7 @@ export const createProduct = (productData) => async (dispatch) => {
     const { data } = await axios.post(
       `/api/admin/product/new`,
       productData,
-      config
+      config,
     );
 
     dispatch({
@@ -149,7 +142,7 @@ export const updateProduct = (id, productData) => async (dispatch) => {
     const { data } = await axios.put(
       `/api/admin/product/${id}`,
       productData,
-      config
+      config,
     );
 
     dispatch({
@@ -245,7 +238,7 @@ export const deleteReviews = (reviewId, productId) => async (dispatch) => {
     dispatch({ type: DELETE_REVIEW_REQUEST });
 
     const { data } = await axios.delete(
-      `/api/review?id=${reviewId}&productId=${productId}`
+      `/api/review?id=${reviewId}&productId=${productId}`,
     );
 
     dispatch({

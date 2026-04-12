@@ -50,7 +50,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={HomeScreen} />
 
-          <Route exact path="/products" component={HomeScreen} />
+          <Route exact path="/search/:keyword" component={HomeScreen} />
 
           <Route exact path="/product/:id" component={ProductDetails} />
 

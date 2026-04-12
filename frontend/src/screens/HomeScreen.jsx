@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { clearErrors, listProducts } from "../actions/productActions";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 import ProductScreen from "./ProductScreen";
 import {
   Row,
@@ -26,52 +27,45 @@ const categories = [
   "SmartPhones",
 ];
 
-const HomeScreen = ({ history, location }) => {
+const HomeScreen = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
-  const { loading, error, products, filteredProductsCount } = useSelector(
-    (state) => state.productList,
-  );
+  const history = useHistory();
+  const location = useLocation();
 
-  const [price, setPrice] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [page, setPage] = useState(1);
-  const [ratings, setRatings] = useState(0);
-  const [pageSize] = useState(8);
+  const { loading, error, products, filteredProductsCount, page, pages } =
+    useSelector((state) => state.productList);
 
-  let searchQuery;
-  if (location.search) {
-    searchQuery = location.search.split("=")[1];
-  }
-
-  const lastPageHandler = () => {
-    if (!loading) {
-      let lastP = Math.ceil(filteredProductsCount / pageSize);
-      setPage(lastP);
-    }
-  };
+  const ratings =
+    Number(new URLSearchParams(location.search).get("ratings")) || 0;
 
   const handleReset = () => {
-    if (searchQuery !== "") {
-      history.push("/");
-    }
+    history.push("/");
+  };
 
-    setPrice(0);
-    setSelectedCategory("");
-    setRatings(0);
-    setPage(1);
-    searchQuery = "";
-    dispatch(
-      listProducts(
-        searchQuery,
-        price,
-        selectedCategory,
-        page,
-        ratings,
-        pageSize,
-      ),
-    );
+  const handleCategoryChange = (e) => {
+    const params = new URLSearchParams(location.search);
+    params.set("category", e.target.value);
+    history.push(`${location.pathname}?${params.toString()}`);
+  };
+
+  const handlePriceChange = (e) => {
+    const params = new URLSearchParams(location.search);
+    params.set("price", e.target.value);
+    history.push(`${location.pathname}?${params.toString()}`);
+  };
+
+  const handleRatingsChange = (value) => {
+    const params = new URLSearchParams(location.search);
+    params.set("ratings", value);
+    history.push(`${location.pathname}?${params.toString()}`);
+  };
+
+  const handlePageChange = (pageNumber) => {
+    const params = new URLSearchParams(location.search);
+    params.set("page", pageNumber);
+    history.push(`${location.pathname}?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -80,27 +74,13 @@ const HomeScreen = ({ history, location }) => {
       dispatch(clearErrors());
     }
 
-    dispatch(
-      listProducts(
-        searchQuery,
-        price,
-        selectedCategory,
-        page,
-        ratings,
-        pageSize,
-      ),
-    );
-  }, [
-    dispatch,
-    error,
-    alert,
-    searchQuery,
-    price,
-    page,
-    selectedCategory,
-    ratings,
-    pageSize,
-  ]);
+    // const queryParams = new URLSearchParams(location.search);
+
+    // const category = queryParams.get("category") || "";
+    // const price = queryParams.get("price") || 0;
+    // const ratings = Number(queryParams.get("ratings")) || 0;
+    dispatch(listProducts(location.search));
+  }, [dispatch, error, alert, location.search]);
   return (
     <Container fluid>
       {loading ? (
@@ -135,7 +115,7 @@ const HomeScreen = ({ history, location }) => {
                           : "fa-regular fa-star"
                       }
                       style={{ color: value <= ratings ? "orange" : "" }}
-                      onClick={() => setRatings(Number(value))}
+                      onClick={() => handleRatingsChange(Number(value))}
                     ></i>
                   ))}
                 </div>
@@ -145,9 +125,8 @@ const HomeScreen = ({ history, location }) => {
                 <Form.Group id="price">
                   <Form.Control
                     as="select"
-                    value={price}
                     className="filter-select"
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={(e) => handlePriceChange(e)}
                   >
                     <option value={0}>Max Price</option>
                     {[50, 100, 200, 500, 800, 900, 1000, 10000].map((p) => (
@@ -162,9 +141,8 @@ const HomeScreen = ({ history, location }) => {
                 <Form.Group id="selectedCategory">
                   <Form.Control
                     as="select"
-                    value={selectedCategory}
                     className="filter-select"
-                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    onChange={handleCategoryChange}
                   >
                     <option value="">All Categories</option>
                     {categories.map((cate) => (
@@ -178,23 +156,12 @@ const HomeScreen = ({ history, location }) => {
 
               <ListGroup.Item>
                 <Button as="div" className="btn-block ">
-                  {page} of{" "}
-                  {(!loading && Math.ceil(filteredProductsCount / pageSize)) ||
-                    1}{" "}
-                  page
+                  {`${page} of ${pages} pages`}
                 </Button>
                 <ButtonGroup size="sm">
                   <Button
                     type="button"
-                    onClick={() => setPage(1)}
-                    disabled={page === 1}
-                    variant="light"
-                  >
-                    First
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => setPage((p) => p - 1)}
+                    onClick={() => handlePageChange(page - 1)}
                     disabled={page === 1}
                     variant="light"
                   >
@@ -203,19 +170,11 @@ const HomeScreen = ({ history, location }) => {
 
                   <Button
                     type="button"
-                    onClick={() => setPage((p) => p + 1)}
+                    onClick={() => handlePageChange(page + 1)}
                     variant="light"
-                    disabled={page * pageSize >= filteredProductsCount}
+                    disabled={page === pages}
                   >
                     Next
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={lastPageHandler}
-                    variant="light"
-                    disabled={page * pageSize >= filteredProductsCount}
-                  >
-                    Last
                   </Button>
                 </ButtonGroup>
               </ListGroup.Item>

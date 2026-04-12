@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -7,30 +7,43 @@ import HomeScreen from "../screens/HomeScreen";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Form, FormControl, NavDropdown } from "react-bootstrap";
 import { logout } from "../actions/userAction";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useAlert } from "react-alert";
 
 const Header = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const history = useHistory();
+  const location = useLocation();
+
+  const [keyword, setKeyword] = useState("");
 
   const { user, isAuthenticated } = useSelector((state) => state.user);
-  const [search, setSearch] = useState("");
+
+  // Sync input with URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    setKeyword(params.get("keyword") || "");
+  }, [location.search]);
+
+  const searchSubmitHandler = (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams(location.search);
+
+    if (keyword.trim()) {
+      params.set("keyword", keyword);
+    } else {
+      params.delete("keyword");
+    }
+
+    const query = params.toString();
+    history.push(query ? `/?${query}` : "/");
+  };
 
   const logoutHandler = () => {
     dispatch(logout());
     alert.success("Logged out successfully");
-  };
-
-  const searchSubmitHandler = (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      history.push(`products/?search=${search}`);
-    } else {
-      history.push("/");
-      setSearch("");
-    }
   };
 
   return (
@@ -58,9 +71,9 @@ const Header = () => {
               <FormControl
                 type="text"
                 placeholder="Search..."
-                value={search}
+                value={keyword}
                 onChange={(e) => {
-                  setSearch(e.target.value);
+                  setKeyword(e.target.value);
                 }}
               />
               <Button type="submit" className="text-white">

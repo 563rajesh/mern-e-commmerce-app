@@ -64,14 +64,16 @@ const deleteProduct = asyncHandler(async (req, res) => {
 //User route to get all products
 const getProducts = asyncHandler(async (req, res) => {
   const productsCount = await Product.countDocuments();
-
-  const { query, category, price, page, rating, pageSize } = req.query;
+  const { keyword, category, price, rating, page } = req.query;
   const filter = {};
 
-  if (query) filter.name = { $regex: new RegExp(query, "i") };
+  if (keyword) filter.name = { $regex: new RegExp(keyword, "i") };
   if (category) filter.category = category;
   if (price && price > 0) filter.price = { $lte: parseFloat(price) };
   if (rating) filter.rating = { $gte: parseFloat(rating) };
+
+  const pageSize = 8;
+  const pages = Math.ceil(productsCount / pageSize);
 
   const filteredProductsCount = await Product.countDocuments(filter);
 
@@ -87,6 +89,8 @@ const getProducts = asyncHandler(async (req, res) => {
       filteredProductsCount,
       productsCount,
       products,
+      page: Number(page) || 1,
+      pages,
     });
   }
 });
@@ -125,7 +129,7 @@ const createProductReview = asyncHandler(async (req, res) => {
   if (isReviewed) {
     product.reviews.map((rev) => {
       if (rev.user === req.user._id) {
-        (rev.comment = comment), (rev.rating = Number(rating));
+        ((rev.comment = comment), (rev.rating = Number(rating)));
       }
     });
   } else {
@@ -165,7 +169,7 @@ const deleteReview = asyncHandler(async (req, res) => {
   }
 
   const reviews = product.reviews.filter(
-    (rev) => rev._id.toString() !== req.query.id.toString()
+    (rev) => rev._id.toString() !== req.query.id.toString(),
   );
 
   let avg = 0;
@@ -195,7 +199,7 @@ const deleteReview = asyncHandler(async (req, res) => {
       new: true,
       runValidators: true,
       useFindAndModify: false,
-    }
+    },
   );
 
   res.status(200).json({

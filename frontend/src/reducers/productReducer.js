@@ -34,24 +34,35 @@ import {
   CLEAR_ERRORS,
 } from "../constants/productConstant";
 
-export const productListReducer = (state = { products: [] }, action) => {
+const initialState = {
+  products: [],
+  loading: false,
+  error: null,
+  page: 1,
+  pages: 1, // total pages
+};
+
+export const productListReducer = (state = initialState, action) => {
   switch (action.type) {
     case PRODUCT_LIST_REQUEST:
     case ADMIN_PRODUCT_REQUEST:
-      return { loading: true, products: [] };
+      return { ...state, loading: true };
 
     case PRODUCT_LIST_SUCCESS:
     case ADMIN_PRODUCT_SUCCESS:
       return {
+        ...state,
         loading: false,
         products: action.payload.products,
         productsCount: action.payload.productsCount,
         filteredProductsCount: action.payload.filteredProductsCount,
+        page: action.payload.page || 1,
+        pages: action.payload.pages || 1,
       };
 
     case PRODUCT_LIST_FAILS:
     case ADMIN_PRODUCT_FAIL:
-      return { loading: false, error: action.payload };
+      return { ...state, loading: false, error: action.payload };
 
     case CLEAR_ERRORS:
       return {
@@ -159,7 +170,7 @@ export const productReducer = (state = {}, action) => {
 
 export const productDetailsReducer = (
   state = { product: { reviews: [] } },
-  action
+  action,
 ) => {
   switch (action.type) {
     case PRODUCT_DETAILS_REQUEST:
