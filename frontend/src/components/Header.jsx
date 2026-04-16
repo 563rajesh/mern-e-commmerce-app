@@ -9,10 +9,15 @@ import { Button, Form, FormControl, NavDropdown } from "react-bootstrap";
 import { logout } from "../actions/userAction";
 import { useHistory, useLocation } from "react-router-dom";
 import { useAlert } from "react-alert";
+import axios from "axios";
 
 const Header = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
+
+  const [error, setError] = useState(null);
+  const [aiLoading, setAILoading] = useState(false);
+
   const history = useHistory();
   const location = useLocation();
 
@@ -20,31 +25,61 @@ const Header = () => {
 
   const { user, isAuthenticated } = useSelector((state) => state.user);
 
-  // Sync input with URL
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    setKeyword(params.get("keyword") || "");
-  }, [location.search]);
-
-  const searchSubmitHandler = (e) => {
+  const handleAISearch = async (e) => {
     e.preventDefault();
+    setAILoading(true);
 
-    const params = new URLSearchParams(location.search);
+    try {
+      if (!keyword || keyword.trim() === "") {
+        setError("Please enter a search query.");
+        return;
+      }
+      const { data } = await axios.post("/api/ai/parse", {
+        query: keyword,
+      });
 
-    if (keyword.trim()) {
-      params.set("keyword", keyword);
-    } else {
-      params.delete("keyword");
+      setAILoading(false);
+
+      // 🔥 Fallback check
+      if (!data.isValid) {
+        setError("Couldn't understand your search. Try something else.");
+        return;
+      }
+
+      const filters = data.filters;
+
+      // 🔥 Convert to URL params
+      const params = new URLSearchParams(location.search);
+
+      if (filters.category) params.set("category", filters.category);
+      if (filters.keyword) params.set("keyword", filters.keyword);
+      if (filters.price) params.set("price", filters.price);
+      if (filters.rating) params.set("rating", filters.rating);
+
+      history.push(`/products/?${params.toString()}`);
+    } catch (error) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setAILoading(false);
     }
-
-    const query = params.toString();
-    history.push(query ? `/?${query}` : "/");
   };
 
   const logoutHandler = () => {
     dispatch(logout());
     alert.success("Logged out successfully");
   };
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setKeyword("");
+    }
+  }, [location.pathname]);
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      setError(null);
+    }
+  }, [error, alert]);
 
   return (
     <>
@@ -62,11 +97,7 @@ const Header = () => {
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Form
-              inline
-              onSubmit={searchSubmitHandler}
-              className="search ml-auto"
-            >
+            <Form inline onSubmit={handleAISearch} className="search ml-auto">
               <i className="fa-solid fa-magnifying-glass icon search-icon"></i>
               <FormControl
                 type="text"
@@ -76,8 +107,8 @@ const Header = () => {
                   setKeyword(e.target.value);
                 }}
               />
-              <Button type="submit" className="text-white">
-                Search
+              <Button type="submit" className="text-white" disabled={aiLoading}>
+                {aiLoading ? "Processing..." : "Search"}{" "}
               </Button>
             </Form>
 

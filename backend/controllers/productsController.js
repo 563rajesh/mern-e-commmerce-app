@@ -63,8 +63,8 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 //User route to get all products
 const getProducts = asyncHandler(async (req, res) => {
-  const productsCount = await Product.countDocuments();
-  const { keyword, category, price, rating, page } = req.query;
+  // const productsCount = await Product.countDocuments();
+  const { keyword, category, price, rating, page, sort } = req.query;
   const filter = {};
 
   if (keyword) filter.name = { $regex: new RegExp(keyword, "i") };
@@ -72,30 +72,51 @@ const getProducts = asyncHandler(async (req, res) => {
   if (price && price > 0) filter.price = { $lte: parseFloat(price) };
   if (rating) filter.rating = { $gte: parseFloat(rating) };
 
-  const pageSize = 8;
-  const pages = Math.ceil(productsCount / pageSize);
+  let sortOption = {};
+
+  if (sort === "price_asc") sortOption.price = 1;
+  if (sort === "price_desc") sortOption.price = -1;
+  if (sort === "rating_desc") sortOption.rating = -1;
 
   const filteredProductsCount = await Product.countDocuments(filter);
 
+  const pageSize = 8;
+  const pages = Math.ceil(filteredProductsCount / pageSize);
+
   const products = await Product.find(filter)
+    .sort(sortOption || { createdAt: -1 })
     .skip((page - 1) * pageSize)
     .limit(parseInt(pageSize));
 
-  if (!products) {
-    res.status(404);
-    throw new Error("Product not found");
-  } else {
-    res.status(200).json({
-      filteredProductsCount,
-      productsCount,
-      products,
+  // if (!products || products.length === 0) {
+  //   res.status(404);
+  //   throw new Error("Product not found");
+  // } else {
+  //   res.status(200).json({
+  //     // filteredProductsCount,
+  //     // productsCount,
+  //     products,
+  //     page: Number(page) || 1,
+  //     pages,
+  //   });
+  // }
+  if (!products || products.length === 0) {
+    return res.status(200).json({
+      products: [],
       page: Number(page) || 1,
       pages,
+      message: "No products found",
     });
   }
+
+  res.status(200).json({
+    products,
+    page: Number(page) || 1,
+    pages,
+  });
 });
 
-//get single product for both user and admin
+//Get single product for both user and admin
 const getProductDetails = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
