@@ -30,7 +30,7 @@ const Header = () => {
     setAILoading(true);
 
     try {
-      if (!keyword || keyword.trim() === "") {
+      if (!keyword?.trim()) {
         setError("Please enter a search query.");
         return;
       }
@@ -55,6 +55,15 @@ const Header = () => {
       if (filters.keyword) params.set("keyword", filters.keyword);
       if (filters.price) params.set("price", filters.price);
       if (filters.rating) params.set("rating", filters.rating);
+
+      if (filters.sort) {
+        const sortMap = {
+          price_asc: "price_asc",
+          price_desc: "price_desc",
+          rating_desc: "rating_desc",
+        };
+        params.set("sort", sortMap[filters.sort]);
+      }
 
       history.push(`/products/?${params.toString()}`);
     } catch (error) {
@@ -102,13 +111,14 @@ const Header = () => {
               <FormControl
                 type="text"
                 placeholder="Search..."
+                className="flex-grow-1"
                 value={keyword}
                 onChange={(e) => {
                   setKeyword(e.target.value);
                 }}
               />
               <Button type="submit" className="text-white" disabled={aiLoading}>
-                {aiLoading ? "Processing..." : "Search"}{" "}
+                {aiLoading ? "Loading..." : "Search"}{" "}
               </Button>
             </Form>
 

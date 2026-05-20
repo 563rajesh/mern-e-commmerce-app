@@ -14,24 +14,44 @@ const smartSearch = asyncHandler(async (req, res) => {
   const prompt = `
 Convert the user query into JSON filters for an e-commerce search.
 
-Only return valid JSON.
+Return ONLY valid raw JSON.
 
-Fields:
-- keyword (main product name like shoes, phone, laptop)
-- category (string)
-- rating (number, minimum rating)
-- price (number, max price)
+Expected JSON Schema:
+{
+  "keyword": "string | null",
+  "category": "string | null",
+  "brand": "string | null",
+  "rating": "number | null",
+  "price": "number | null",
+  "sort": "price_asc | price_desc | rating_desc | null"
+}
 
-Query: "${query}"
+Rules:
+1. If value not found → null
+2. Do not explain or add markdown, return raw JSON only.
+3. cheap → price = 100
+4. premium → price = 1000
+5. good/best → rating = 4
+6. price low to high → sort = "price_asc"
+7. price high to low → sort = "price_desc"
+8. top rated → sort = "rating_desc"
+
+
+Example Query:
+"best Mouse under 500"
 
 Example Output:
 {
-  "keyword": "camera",
-  "category": "electronics",
-  "brand": "nike",
+  "keyword": "Mouse",
+  "category": null,
+  "brand": null,
   "rating": 4,
-  "price": 2000
+  "price": 500,
+  "sort": null
 }
+
+Query: "${query}"
+
 `;
   // 🔹 Step 2: Call Gemini API
   const response = await axios.post(
@@ -56,6 +76,15 @@ Example Output:
     filters = JSON.parse(text);
   } catch (err) {
     console.log("Invalid JSON from AI, fallback triggered");
+    // Fallback search: If AI fails, return empty filters
+    filters = {
+      keyword: query,
+      category: null,
+      brand: null,
+      rating: null,
+      price: null,
+      sort: null,
+    };
     isValid = false;
   }
 
@@ -64,8 +93,10 @@ Example Output:
     !filters.keyword &&
     !filters.category &&
     !filters.price &&
-    !filters.rating
+    !filters.rating &&
+    !filters.sort
   ) {
+    filters.keyword = query;
     isValid = false;
   }
 
