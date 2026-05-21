@@ -27,47 +27,55 @@ const Header = () => {
 
   const handleAISearch = async (e) => {
     e.preventDefault();
+
+    if (!keyword?.trim()) {
+      setError("Please enter a search query.");
+      return;
+    }
+
     setAILoading(true);
+    setError(null);
 
     try {
-      if (!keyword?.trim()) {
-        setError("Please enter a search query.");
-        return;
-      }
       const { data } = await axios.post("/api/ai/parse", {
         query: keyword,
       });
 
-      setAILoading(false);
+      const params = new URLSearchParams();
 
-      // 🔥 Fallback check
-      if (!data.isValid) {
-        setError("Couldn't understand your search. Try something else.");
-        return;
+      if (data?.isValid) {
+        const filters = data.filters || {};
+
+        // 🔥 Convert to URL params
+
+        if (filters.category) params.set("category", filters.category);
+        if (filters.keyword) params.set("keyword", filters.keyword);
+        if (filters.price) params.set("price", filters.price);
+        if (filters.rating) params.set("rating", filters.rating);
+
+        if (filters.sort) {
+          const sortMap = {
+            price_asc: "price_asc",
+            price_desc: "price_desc",
+            rating_desc: "rating_desc",
+          };
+          params.set("sort", sortMap[filters.sort]);
+        }
+      } else {
+        params.set("keyword", keyword.trim());
+        console.log(
+          "AI returned invalid filters, using fallback keyword search",
+        );
       }
-
-      const filters = data.filters;
-
-      // 🔥 Convert to URL params
-      const params = new URLSearchParams(location.search);
-
-      if (filters.category) params.set("category", filters.category);
-      if (filters.keyword) params.set("keyword", filters.keyword);
-      if (filters.price) params.set("price", filters.price);
-      if (filters.rating) params.set("rating", filters.rating);
-
-      if (filters.sort) {
-        const sortMap = {
-          price_asc: "price_asc",
-          price_desc: "price_desc",
-          rating_desc: "rating_desc",
-        };
-        params.set("sort", sortMap[filters.sort]);
-      }
-
       history.push(`/products/?${params.toString()}`);
     } catch (error) {
-      setError("Something went wrong. Please try again.");
+      console.log("AI Search error:", error.message);
+      setError("Try again...");
+
+      // Optional fallback if AI API itself fails
+      const params = new URLSearchParams();
+      params.set("keyword", keyword.trim());
+      history.push(`/products/?${params.toString()}`);
     } finally {
       setAILoading(false);
     }
